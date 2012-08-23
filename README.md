@@ -160,7 +160,7 @@ But also accept a parameter Start who can by use to paginate the result.
 The total number of result is also display in the search result:
 found.hits.found 
 
-Limitate top facet
+Limit top facet result
 ------
 You can only request the top facet as part of the result.
 Facet object accept a TopResult parameter.
@@ -179,7 +179,7 @@ Developed by Martin Magakian
 dev.martin.magakian@gmail.com
 
 
-Licene
+License
 =========
 MIT License (MIT)
 
