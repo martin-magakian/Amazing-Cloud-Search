@@ -1,4 +1,4 @@
-Amazing Cloud Search - C# API For Amazon Cloud Search<
+Amazing Cloud Search - C# API For Amazon Cloud Search
 ============
 
 Allow you to search, faceted search, add, update, remove objects from your Amazon Cloud Search Index in C#.
@@ -14,8 +14,8 @@ How to use
 First you need a Amazon cloud search instance and it URL (We will call it a key)
 It should look like : yourDomainName-xxxxxxxxxxxxx.us-east-1.cloudsearch.amazonaws.com
 
-
-Exemple with a Cloud Search indexing movies who implement SearchDocument (just an ID):
+This exemple can be use with IMDB default index that you can select when creating your cloud search.
+It index movies who implement SearchDocument (just an ID):
 
 	public class Movie : SearchDocument
 	{
@@ -168,7 +168,7 @@ For exemple we went the top 3 movie genre of our search
 var genreFacet = new Facet { Name = "genre", TopResult = 2};
 
 
-Dependendy
+Dependency
 =========
 - Json.NET
 

@@ -1,0 +1,17 @@
+*resharper.user
+build/
+[Bb]in/
+[Oo]bj/
+*.suo
+*.sln.cache
+_ReSharper.*/
+*.user
+*.Publish.xml
+web.config.debug
+web.config.release
+web.config.test
+app.config.debug
+app.config.release
+app.config.test
+TestResults
+AmazingCloudSearch.6.0.ReSharper.user
