@@ -1,182 +1,213 @@
-Amazing Cloud Search - C# API For Amazon Cloud Search<
+Introduction
 ============
-Allow you to search, faceted search, add, update, remove objects from your Amazon Cloud Search Index in C#.
 
-Improuve Amazing Cloud Search !
+Strudel is a framework-agnostic templating system inspired by [Handlebars](http://handlebarsjs.com/) and the like.
+
+
+Tag Types
 =========
-Feel free to do fork this code and improuve it. (CF: Licene MIT)
 
-How to use
+Tags are indicated by an at sign (@) followed by some other junk. `@(person)` is a tag, and so are `@with(person)` and `@end`. The following sections describe the different kinds of tags.
+
+
+Variables
 ---------
-First you need a Amazon cloud search instance and it URL (We will call it a key)
-It should look like : yourDomainName-xxxxxxxxxxxxx.us-east-1.cloudsearch.amazonaws.com
 
+A variable can be referenced within a context simply by enclosing the variable name in parentheses preceded by an at sign. For example, compiling the template `@(name) is currently in @(location)` with the `Strudel.compile` function returns the compiled template as a function. Calling the function with a context object will return a string with the appropriate transformations applied to the template tags. If we called  the function returned by `Strudel.compile` with the context `{'name': 'Brendan', 'location': 'New York'}` passed in as an argument, the string "Brendan is currently in New York" would be returned.
 
-Exemple with a Cloud Search indexing movies who implement SearchDocument (just an ID):
+Variable tags have some helpful default behavior. The variable name is simply an identifier into the context object. Values referenced by the identifier will be converted to strings automatically, but empty, null, or undefined values will not be rendered. Most importantly, variable tags automatically escape HTML. To override this behavior and render an unescaped string, use double parentheses.
 
-	public class Movie : SearchDocument
+Here's a context and a template string so we can see variable tags in action.
+
 	{
-		public List<string> actor { get; set; }
-		public string director { get; set; }
-		public DateTime mydate { get; set; }
-		public string title { get; set; }
-		public int year { get; set; }
+		'name': 'Brendan',
+		'location': 'New York',
+		'company': '<b>Wurk Happy</b>'
 	}
 
-> The raison why my object field start in lowercase is because YOU NEED to match the field name of your database.
->For the moment you need to match the field name.
+	<div class="person">
+		<h1>@(name)</h1>
+		<p>@(address)</p>
+		<p>@(company)</p>
+		<p>@((company))</p>
+	</div>
 
-Add a movie
+The template shown above would render the following output:
+
+	<div class="person">
+		<h1>Brendan</h1>
+		<p></p>
+		<p>&lt;b&gt;Wurk Happy&lt;/b&gt;</p>
+		<p><b>Wurk Happy</b></p>
+	</div>
+
+A variable tag may use dot notation to specify a path through an object graph. Additionally, array lookups can use square bracket notation. Consider the following context and template.
+
+	{
+		person: {
+			name: 'Brendan',
+			interests: ['puppies', 'Python', 'parrots']
+		}
+	}
+
+	<p><b>@(person.name)</b> likes @(person.interests[1]).</p>
+
+The template and context shown above would render the following output:
+
+	<p><b>Brendan</b> likes Python.</p>
+
+
+Blocks
 ------
 
-	var cloudSearch = new CloudSearch<Movie>("YOU_AMAZON_CLOUD_SEARCH_KEY", "2011-02-01");
-	var movie = new Movie { id = "fjuhewdijsdjoi", title = "simple title", year = 2012, mydate = DateTime.Now, actor = new List<string> { "good actor1", "good actor2" }, director = "martin magakian" };
-	cloudSearch.Add(movie);
+A block is a section of a template that falls between opening and closing block tags. Opening block tags consist of an at sign, a block identifier, and an optional expression. Blocks continue until the corresponding `@end` tag. The behavior of a block depends on its identifier.
+
+Pre-defined blocks include `with`, `each`, `if`, and `unless`. Let's look at each of these in detail.
 
 
-Remove a movie
-------
-	var movie = new Movie { id = "fjuhewdijsdjoi" }
-	cloudSearch.Delete(movie);
-	
-	
-Update a movie
-------
-	movie.title = "In the skin of Amazon cloud search";
-	cloudSearch.Update(movie);
-	
-	
-Search for movies
-------
-	var searchQuery = new SearchQuery<Movie> {Keyword = "star wars"};
-	var found = cloudSearch.Search(searchQuery);
-	
-	
-Search for a maximum of 25 movies only in the categorie from Sci-Fi
-------
-	var bQuery = new BooleanQuery();
-	var gCondition = new StringBooleanCondition("genre", "Sci-Fi");
-	bQuery.Conditions.Add(gCondition);
-	
-	var searchQuery = new SearchQuery<Movie> {Keyword = "star wars", Size = 25, BooleanQuery = bQuery};
-	var found = cloudSearch.Search(searchQuery);
-	
-	
-Search for movies only from 2000 to 2004 in category Sci-Fi
-------
-	var bQuery = new BooleanQuery();
-	var gCondition = new StringBooleanCondition("genre", "Sci-Fi");
-	var yCondition = new IntBooleanCondition("year");
-	yCondition.SetInterval(2000,2004);
-	bQuery.Conditions.Add(gCondition);
-	bQuery.Conditions.Add(yCondition);
+__The With Block__
 
-	var searchQuery = new SearchQuery<Movie> {Keyword = "star wars", Facets = liFacet, Size = 20, BooleanQuery = bQuery};
-	var found = cloudSearch.Search(searchQuery);
-	
-	
-Search for movies + number of result per category (faceted search)
-------
-	var genreFacet = new Facet { Name = "genre" };
-	var liFacet = new List<Facet> { genreFacet };
-	
-	var searchQuery = new SearchQuery<Movie> {Keyword = "star wars"};
-	var found = cloudSearch.Search(searchQuery);
-	
-	
-Search for movies + number of result in 'Sci-Fi' and 'Fantasy' category (faceted search)
-------
-	var genreFacetContraint = new StringFacetConstraints();
-	genreFacetContraint.AddContraint("Sci-Fi");
-	genreFacetContraint.AddContraint("Fantasy");
-	var genreFacet = new Facet { Name = "genre", FacetContraint = genreFacetContraint };
-	var liFacet = new List<Facet> { genreFacet };
-	
-	var searchQuery = new SearchQuery<Movie> {Keyword = "star wars", Facets = liFacet};
-	var found = cloudSearch.Search(searchQuery);
-	
-	
-Search for movies + number of result in 'Sci-Fi' and 'Fantasy' category + number of result in the year 1950 and between 1980 and 2012 (faceted search)
-------
-	var genreFacetContraint = new StringFacetConstraints();
-	genreFacetContraint.AddContraint("Sci-Fi");
-	genreFacetContraint.AddContraint("Fantasy");
-	var genreFacet = new Facet { Name = "genre", FacetContraint = genreFacetContraint };
+The `with` block evaluates the expression in its opening tag and pushes the corresponding object onto the context stack. (The `with` block behaves like `let` in some functional languages.)
 
-	var yearFacetContraint = new IntFacetContraints();
-	yearFacetContraint.AddFrom(1950);
-	yearFacetContraint.AddInterval(1980, 2012);
-	var yearFacet = new Facet { Name = "year", FacetContraint = yearFacetContraint };
+Assume the template we're about to look at uses this context:
 
-	var liFacet = new List<Facet> { genreFacet, yearFacet };
-	
-    var searchQuery = new SearchQuery<Movie> {Keyword = "star wars", Facets = liFacet};
-	var found = cloudSearch.Search(searchQuery);
-	
-	
-All together now: Facet for Sci-Fi,Fantasy, in 1950, between 1980 to 2012 + search only for movie in Sci-Fi from 2000 to 2004
-------
-	var cloudSearch = new CloudSearch<Movie>("YOUR_CLOUD_SEARCH_API", "2011-02-01");
+	{
+		name: "Strudel",
+		author: {
+			firstName: "Brendan",
+			lastName: "Berg"
+		}
+	}
 
-	//build facet
-	var genreFacetContraint = new StringFacetConstraints();
-	genreFacetContraint.AddContraint("Sci-Fi");
-	genreFacetContraint.AddContraint("Fantasy");
-	var genreFacet = new Facet { Name = "genre", FacetContraint = genreFacetContraint };
+Consider the following template.
 
-	var yearFacetContraint = new IntFacetContraints();
-	yearFacetContraint.AddFrom(1950);
-	yearFacetContraint.AddInterval(1980, 2012);
-	var yearFacet = new Facet { Name = "year", FacetContraint = yearFacetContraint };
+	<div class="project">
+		<h1>@(name)</h1>
+		@with(author)
+			<h2>By @(firstName) @(lastName)</h2>
+		@end
+	</div>
 
-	var liFacet = new List<Facet> { genreFacet, yearFacet };
+Compiling the template would result in the following:
+
+	<div class="project">
+		<h1>Strudel</h1>
+		<h2>By Brendan Berg</h2>
+	</div>
 
 
-	//build boolean query
-	var bQuery = new BooleanQuery();
-	var gCondition = new StringBooleanCondition("genre", "Sci-Fi");
-	var yCondition = new IntBooleanCondition("year");
-	yCondition.SetInterval(2000,2004);
-	bQuery.Conditions.Add(gCondition);
-	bQuery.Conditions.Add(yCondition);
+__The Each Block__
 
-	//build search
-	var searchQuery = new SearchQuery<Movie> {Keyword = "star wars", Facets = liFacet, Size = 20, BooleanQuery = bQuery};
+The `each` block repeatedly renders its contents with each element of an array as its context.
 
-	//search
-	var found = cloudSearch.Search(searchQuery);
-	
-	
-More option
-=========
+Consider the following context and template:
 
-Pagination
-------
-SearchQuery accept parameter Size for the number of result.
-But also accept a parameter Start who can by use to paginate the result.
-The total number of result is also display in the search result:
-found.hits.found 
+	{
+		title: "Introduction to Tornado",
+		authors: [
+			{firstName: "Brendan", lastName: "Berg"},
+			{firstName: "Mike", lastName: "Dory"},
+			{firstName: "Adam", lastName: "Parrish"}
+		]
+	}
 
-Limitate top facet
-------
-You can only request the top facet as part of the result.
-Facet object accept a TopResult parameter.
-For exemple we went the top 3 movie genre of our search
-var genreFacet = new Facet { Name = "genre", TopResult = 2};
+	<div class="book">
+		<h1>@(title)</h1>
+		<ul>
+			@each(authors)
+				<li>@(firstName) @(lastName)</li>
+			@end
+		</ul>
+	</div>
 
+The output would be:
 
-Dependendy
-=========
-- Json.NET
+	<div class="book">
+		<h1>Introduction to Tornado</h1>
+		<ul>
+			<li>Brendan Berg</li>
+			<li>Mike Dory</li>
+			<li>Adam Parrish</li>
+		</ul>
+	</div>
 
 
-Contact
-=========
-Developed by Martin Magakian
-dev.martin.magakian@gmail.com
+__The If Block__
+
+The `if` block conditionally executes if its expression evaluates to anything other than `false`, `undefined`, `null`, `[]`, or `""` (i.e. the value of the expression must be "truthy").
+
+	<div class="entry">
+		@if(author)
+			<h1>By @(firstName) @(lastName)</h1>
+		@end
+	</div>
+
+When rendered with an empty context would result in the following:
+
+	<div class="entry">
+	</div>
+
+Additionally, you may define an `@else` clause that renders if the `@if` tag's expression returns a falsy value:
+
+	<div class="entry">
+		@if(author)
+			<h1>By @(firstName) @(lastName)</h1>
+		@else
+			<h1>Anonymous</h1>
+		@end
+	</div>
 
 
-Licene
-=========
-MIT License (MIT)
+__The Unless Block__
 
+The `unless` block is the inverse of the `@if` block; it conditionally executes if its expression is falsy.
+
+	@unless(author)
+		<p><blink>WARNING:</blink> This entry has no author!</p>
+	@end
+
+An `unless` block may also have an optional `@else` clause.
+
+
+Custom Blocks
+-------------
+
+Custom blocks may be registered with the compiler to define custom behavior for arbitrary identifiers. A block handler is a function that is passed a context and an options object. The options object has an `fn` property that represents the consequent body of the block, and `inverse` property that represents the alternative body if the block was constructed with an `@else` clause.
+
+Let's revisit the `each` block example above. If we wanted a custom block tag to render HTML lists, we could register the following helper:
+
+	Strudel.registerHandler('list', function (context, options) {
+		var html = '', i, l;
+		
+		for (i = 0, l = context.length; i < l; i++) {
+			html += '<li>' + options.fn(context[i]) + '</li>';
+		}
+		
+		return '<ul>' + html + '</ul>';
+	});
+
+After defining the helper function, you can invoke a context just like a normal Strudel template.
+
+	{
+		authors: [
+			{firstName: "Brendan", lastName: "Berg"},
+			{firstName: "Mike", lastName: "Dory"},
+			{firstName: "Adam", lastName: "Parrish"}
+		]
+	}
+
+	@list(authors)@(firstName) @(lastName)@end
+
+When executed, the template would render the following HTML:
+
+	<ul>
+		<li>Brendan Berg</li>
+		<li>Mike Dory</li>
+		<li>Adam Parrish</li>
+	</ul>
+
+
+Variable Helpers
+----------------
+
+This functionality is not yet supported.
