@@ -5,16 +5,15 @@ Allow you to search, faceted search, add, update, remove objects from your Amazo
 
 Improuve Amazing Cloud Search !
 =========
-
-Feel free to do fork this code and improuve it. (CF: Licene MIT)
+Feel free to fork and improuve it. (CF: License MIT)
 
 How to use
 ---------
-
 First you need a Amazon cloud search instance and it URL (We will call it a key)
 It should look like : yourDomainName-xxxxxxxxxxxxx.us-east-1.cloudsearch.amazonaws.com
 
-This exemple can be use with IMDB default index that you can select when creating your cloud search.
+> This exemple can be use with IMDB default index that you can select when creating your Cloud Search.
+
 It index movies who implement SearchDocument (just an ID):
 
 	public class Movie : SearchDocument
@@ -26,12 +25,11 @@ It index movies who implement SearchDocument (just an ID):
 		public int year { get; set; }
 	}
 
-> The raison why my object field start in lowercase is because YOU NEED to match the field name of your database.
->For the moment you need to match the field name.
+> The raison why my object field start in lowercase is because YOU NEED to match the field name of your database. (need to be improuve)
+> For the moment you need to match the field name.
 
 Add a movie
 ------
-
 	var cloudSearch = new CloudSearch<Movie>("YOU_AMAZON_CLOUD_SEARCH_KEY", "2011-02-01");
 	var movie = new Movie { id = "fjuhewdijsdjoi", title = "simple title", year = 2012, mydate = DateTime.Now, actor = new List<string> { "good actor1", "good actor2" }, director = "martin magakian" };
 	cloudSearch.Add(movie);
