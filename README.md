@@ -3,26 +3,26 @@ Amazing Cloud Search - C# API For Amazon Cloud Search
 
 Allow you to search, faceted search, add, update, remove objects from your Amazon Cloud Search Index in C#.
 
-Improuve Amazing Cloud Search !
+Improve Amazing Cloud Search !
 ---------
 Feel free to fork and improuve Amazing Cloud Search API.
 
 Thanks to uWorkin for this work
 =========
 I [find work with uWorkin](http://www.uworkin.com) an awsome Melbourne based company using incredible technology.
-We choosed to use Amazon Cloud Seach for it powerfull search engine mechanism and specially for it incredible faceleted search.
+We chose to use Amazon Cloud Seach for it's powerfull search engine mechanism and specially for it's incredible faceleted search.
 
-All my thanks to uWorkin who gave me work and open source the first Amazon Cloud Search API to the C# community.
+All my thanks to uWorkin who gave me the opportunity to work on and open source the first Amazon Cloud Search API for the C# community.
 [http://www.uworkin.com](http://www.uworkin.com)
  
 How to use
 ---------
-First you need a Amazon cloud search instance and it URL (We will call it a key)
+First you need a Amazon cloud search instance and it's URL (We will call it a key)
 It should look like : yourDomainName-xxxxxxxxxxxxx.us-east-1.cloudsearch.amazonaws.com
 
-> This exemple can be use with IMDB default index that you can select when creating your Cloud Search.
+> This exemple can be used with the IMDB default index that you can select when creating your Cloud Search.
 
-It index movies who implement SearchDocument (just an ID):
+It indexes movies which implement SearchDocument (just an ID):
 
 	public class Movie : SearchDocument
 	{
@@ -33,8 +33,8 @@ It index movies who implement SearchDocument (just an ID):
 		public int year { get; set; }
 	}
 
-> The raison why my object field start in lowercase is because YOU NEED to match the field name of your database. 
-> This need to be improuve (feel free)
+> The reason why my object field starts in lowercase is because YOU NEED to match the field name in your index. 
+> This needs to be improved (feel free)
 
 Add a movie
 ------
@@ -61,7 +61,7 @@ Search for movies
 	var found = cloudSearch.Search(searchQuery);
 	
 	
-Search for a maximum of 25 movies only in the categorie from Sci-Fi
+Search for a maximum of 25 movies only in the category from Sci-Fi
 ------
 	var bQuery = new BooleanQuery();
 	var gCondition = new StringBooleanCondition("genre", "Sci-Fi");
@@ -105,7 +105,7 @@ Search for movies + number of result in 'Sci-Fi' and 'Fantasy' category (faceted
 	var found = cloudSearch.Search(searchQuery);
 	
 	
-Search for movies + number of result in 'Sci-Fi' and 'Fantasy' category + number of result in the year 1950 and between 1980 and 2012 (faceted search)
+Search for movies + number of results in the 'Sci-Fi' and 'Fantasy' categories + the number of result in the year 1950 and between 1980 and 2012 (faceted search)
 ------
 	var genreFacetContraint = new StringFacetConstraints();
 	genreFacetContraint.AddContraint("Sci-Fi");
@@ -123,7 +123,7 @@ Search for movies + number of result in 'Sci-Fi' and 'Fantasy' category + number
 	var found = cloudSearch.Search(searchQuery);
 	
 	
-All together now: Facet for Sci-Fi,Fantasy, in 1950, between 1980 to 2012 + search only for movie in Sci-Fi from 2000 to 2004
+All together now: Facet for Sci-Fi,Fantasy, in 1950, between 1980 to 2012 + search only for movies in Sci-Fi from 2000 to 2004
 ------
 	var cloudSearch = new CloudSearch<Movie>("YOUR_CLOUD_SEARCH_API", "2011-02-01");
 
@@ -161,16 +161,16 @@ More option
 
 Pagination
 ------
-SearchQuery accept parameter Size for the number of result.
-But also accept a parameter Start who can by use to paginate the result.
-The total number of result is also display in the search result:
+SearchQuery accepts parameter Size for the number of results.
+But also accepts a parameter Start which can by used for paginating the results.
+The total number of results is also displayed in the search results:
 found.hits.found 
 
 Limit top facet result
 ------
-You can only request the top facet as part of the result.
-Facet object accept a TopResult parameter.
-For exemple we went the top 3 movie genre of our search
+You can also request the top facet as part of the results.
+Facet object accepts a TopResult parameter.
+For exemple we want the top 3 movie genres of our search
 var genreFacet = new Facet { Name = "genre", TopResult = 2};
 
 
