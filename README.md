@@ -4,15 +4,16 @@ Amazing Cloud Search - C# API For Amazon Cloud Search
 Allow you to search, faceted search, add, update, remove objects from your Amazon Cloud Search Index in C#.
 
 Improuve Amazing Cloud Search !
-=========
-Feel free to fork and improuve it.
+---------
+Feel free to fork and improuve Amazing Cloud Search API.
 
 Thanks to uWorkin for this work
 =========
 I [find work with uWorkin](http://www.uworkin.com) an awsome Melbourne based company using incredible technology.
 We choosed to use Amazon Cloud Seach for it powerfull search engine mechanism and specially for it incredible faceleted search.
-All my thanks to uWorkin who gave me work and open source the first Amazon Cloud Search API for the C# community.
 
+All my thanks to uWorkin who gave me work and open source the first Amazon Cloud Search API to the C# community.
+[http://www.uworkin.com](http://www.uworkin.com)
  
 How to use
 ---------
@@ -174,7 +175,7 @@ var genreFacet = new Facet { Name = "genre", TopResult = 2};
 
 
 Dependency
-=========
+---------
 - Json.NET
 
 
