@@ -5,8 +5,15 @@ Allow you to search, faceted search, add, update, remove objects from your Amazo
 
 Improuve Amazing Cloud Search !
 =========
-Feel free to fork and improuve it. (CF: License MIT)
+Feel free to fork and improuve it.
 
+Thanks to uWorkin for this work
+=========
+I [find work with uWorkin](http://www.uworkin.com) an awsome Melbourne based company using incredible technology.
+We choosed to use Amazon Cloud Seach for it powerfull search engine mechanism and specially for it incredible faceleted search.
+All my thanks to uWorkin who gave me work and open source the first Amazon Cloud Search API for the C# community.
+
+ 
 How to use
 ---------
 First you need a Amazon cloud search instance and it URL (We will call it a key)
@@ -25,8 +32,8 @@ It index movies who implement SearchDocument (just an ID):
 		public int year { get; set; }
 	}
 
-> The raison why my object field start in lowercase is because YOU NEED to match the field name of your database. (need to be improuve)
-> For the moment you need to match the field name.
+> The raison why my object field start in lowercase is because YOU NEED to match the field name of your database. 
+> This need to be improuve (feel free)
 
 Add a movie
 ------
