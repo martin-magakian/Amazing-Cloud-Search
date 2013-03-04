@@ -19,7 +19,17 @@ namespace AmazingCloudSearch.Query.Boolean
 
         public string GetCondictionParam()
         {
-            return Field + ":" + "'" + Condition + "'"; ;
+            return Field + "%3A" + "'" + Condition + "'";
         }
+
+		public bool IsOrCondition()
+		{
+			return false;
+		}
+
+		public bool IsList()
+		{
+			return false;
+		}
     }
 }

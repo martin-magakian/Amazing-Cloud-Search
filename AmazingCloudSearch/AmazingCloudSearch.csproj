@@ -12,6 +12,10 @@
     <AssemblyName>AmazingCloudSearch</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -53,6 +57,8 @@
     <Compile Include="Contract\Facet\Constraint.cs" />
     <Compile Include="Contract\Facet\Constraints.cs" />
     <Compile Include="Contract\Result\FacetResult.cs" />
+    <Compile Include="Query\Boolean\StringListBooleanCondition.cs" />
+    <Compile Include="Query\Boolean\IntListBooleanCondition.cs" />
     <Compile Include="Serialization\FacetBuilder.cs" />
     <Compile Include="Query\Boolean\BooleanQuery.cs" />
     <Compile Include="Query\Boolean\IntBooleanCondition.cs" />

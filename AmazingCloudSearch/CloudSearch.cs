@@ -33,12 +33,31 @@ namespace AmazingCloudSearch
             _facetBuilder = new FacetBuilder();
         }
 
+		private R Add<R>(List<T> liToAdd) where R : BasicResult, new()
+		{
+			List<BasicDocumentAction> liAction = new List<BasicDocumentAction>();
+
+			BasicDocumentAction action;
+			foreach (T toAdd in liToAdd)
+			{
+				action = _actionBuilder.BuildAction(toAdd, ActionType.ADD);
+				liAction.Add(action);
+			}
+
+			return PerformDocumentAction<R>(liAction);
+		}
+
         private R Add<R>(T toAdd) where R : BasicResult, new()
         {
             var action = _actionBuilder.BuildAction(toAdd, ActionType.ADD);
 
             return PerformDocumentAction<R>(action);
         }
+
+		public AddResult Add(List<T> toAdd)
+		{
+			return Add<AddResult>(toAdd);
+		}
 
         public AddResult Add(T toAdd)
         {
