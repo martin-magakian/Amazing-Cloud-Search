@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using AmazingCloudSearch.Contract;
-using Newtonsoft.Json;
 
 namespace TestProject1
 {

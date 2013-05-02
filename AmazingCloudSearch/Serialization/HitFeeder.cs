@@ -8,9 +8,8 @@ using AmazingCloudSearch.Helper;
 
 namespace AmazingCloudSearch.Serialization
 {
-    class HitFeeder<T> where T : SearchDocument, new()
+    class HitFeeder<T> where T : ISearchDocument, new()
     {
-        private static int MAX_TRY_HIT = 20;
         private JavaScriptSerializer _serializer;
         private ConvertArray _convertArray;
         private ListProperties<T> _listProperties;

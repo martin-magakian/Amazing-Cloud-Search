@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using AmazingCloudSearch.Contract;
 using AmazingCloudSearch.Helper;
 using AmazingCloudSearch.Query.Boolean;
@@ -8,7 +7,7 @@ using AmazingCloudSearch.Query.Facets;
 
 namespace AmazingCloudSearch.Query
 {
-    public class SearchQuery<T> where T : SearchDocument, new()
+    public class SearchQuery<T> where T : ISearchDocument, new()
     {
         public BooleanQuery BooleanQuery { get; set; }
 

@@ -17,7 +17,7 @@ namespace AmazingCloudSearch.Builder
      * 
      */
 
-    public class QueryBuilder<T> where T : SearchDocument, new()
+    public class QueryBuilder<T> where T : ISearchDocument, new()
     {
 		private string _searchUri;
 		private static readonly Regex plusRegex = new Regex(@"\++", RegexOptions.Compiled);
@@ -38,19 +38,37 @@ namespace AmazingCloudSearch.Builder
 			var url = new StringBuilder(_searchUri);
 			url.Append("?");
 
-			FeedKeyword(query.Keyword, url);
+		    if (query.Keyword != null)
+		    {
+		        FeedKeyword(query.Keyword, url);
+		    }
 
-			FeedBooleanCritera(query.BooleanQuery, url);
+		    if (query.BooleanQuery != null)
+		    {
+		        FeedBooleanCritera(query.BooleanQuery, url);
+		    }
 
-			FeedFacet(query.Facets, url);
+		    if (query.Facets != null)
+		    {
+		        FeedFacet(query.Facets, url);
+		    }
 
-			FeedReturnFields(query.Fields, url);
+		    if (query.Fields != null)
+		    {
+		        FeedReturnFields(query.Fields, url);
+		    }
 
-			FeedMaxResults(query.Size, url);
+		    if (query.Size != null)
+		    {
+		        FeedMaxResults(query.Size, url);
+		    }
 
-			FeedStartResultFrom(query.Start, url);
+		    if (query.Start != null)
+		    {
+		        FeedStartResultFrom(query.Start, url);
+		    }
 
-			return url.ToString();
+		    return url.ToString();
 		}
 
 		public string BuildFromPublicSearchQuery(string publicSearchQueryString, SearchQuery<T> query)

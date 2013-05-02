@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using AmazingCloudSearch.Contract;
+﻿using AmazingCloudSearch.Contract;
 using AmazingCloudSearch.Enum;
 using AmazingCloudSearch.Helper;
 
 namespace AmazingCloudSearch.Builder
 {
-    public class ActionBuilder<T> where T : SearchDocument
+    public class ActionBuilder<T> where T : ISearchDocument
     {
 
         public AddUpldateBasicDocumentAction<T> BuildAction(T document, ActionType actionType, int version)
@@ -26,14 +22,14 @@ namespace AmazingCloudSearch.Builder
         }
 
 
-        public BasicDocumentAction BuildDeleteAction(SearchDocument document, ActionType actionType, int version)
+        public BasicDocumentAction BuildDeleteAction(ISearchDocument document, ActionType actionType, int version)
         {
             var type = ActionTypeFunction.ActionTypeToString(actionType);
 
             return new BasicDocumentAction { type = type, id = document.id, version = version };
         }
 
-        public BasicDocumentAction BuildDeleteAction(SearchDocument document, ActionType actionType)
+        public BasicDocumentAction BuildDeleteAction(ISearchDocument document, ActionType actionType)
         {
             int version = Timestamp.CurrentTimeStamp();
 

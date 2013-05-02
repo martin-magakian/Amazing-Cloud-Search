@@ -4,7 +4,7 @@ using AmazingCloudSearch.Contract.Facet;
 
 namespace AmazingCloudSearch.Contract.Result
 {
-    public class SearchResult<T> where T : SearchDocument, new()
+    public class SearchResult<T> where T : ISearchDocument, new()
     {
 
         public bool IsError { get; set; }

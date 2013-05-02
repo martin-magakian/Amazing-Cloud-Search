@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 namespace AmazingCloudSearch
 {
 
-    public class CloudSearch<T> where T : SearchDocument, new()
+    public class CloudSearch<T> where T : ISearchDocument, new()
     {
         private string _documentUri;
         private string _searchUri;
@@ -70,7 +70,7 @@ namespace AmazingCloudSearch
             return Add<UpdateResult>(toUpdate);
         }
 
-        public DeleteResult Delete(SearchDocument toDelete)
+        public DeleteResult Delete(ISearchDocument toDelete)
         {
             var action = _actionBuilder.BuildDeleteAction(new SearchDocument { id = toDelete.id }, ActionType.DELETE);
 
