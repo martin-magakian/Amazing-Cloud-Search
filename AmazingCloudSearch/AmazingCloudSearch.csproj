@@ -89,6 +89,7 @@
     <Compile Include="Query\SearchQuery.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".package-manifest" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
