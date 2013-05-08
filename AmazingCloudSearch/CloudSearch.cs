@@ -11,25 +11,49 @@ using Newtonsoft.Json;
 
 namespace AmazingCloudSearch
 {
+    public interface ICloudSearchSettings
+    {
+        string CloudSearchId { get; set; }
+        string ApiVersion { get; set; }
+    }
+
+    public class CloudSearchSettings : ICloudSearchSettings
+    {
+        public string CloudSearchId { get; set; }
+        public string ApiVersion { get; set; }
+    }
+
     public class CloudSearch<TDocument> where TDocument : ISearchDocument, new()
     {
         readonly string _documentUri;
         readonly string _searchUri;
         readonly ActionBuilder<TDocument> _actionBuilder;
         readonly WebHelper _webHelper;
-        readonly QueryBuilder<TDocument> _queryBuilder;
+        readonly ICloudSearchSettings _cloudSearchSettings;
+        readonly IQueryBuilder<TDocument> _queryBuilder;
         readonly HitFeeder<TDocument> _hitFeeder;
         readonly FacetBuilder _facetBuilder;
 
-        public CloudSearch(string awsCloudSearchId, string apiVersion)
+        public CloudSearch(ICloudSearchSettings cloudSearchSettings, IQueryBuilder<TDocument> queryBuilder)
         {
-            _searchUri = string.Format("http://search-{0}/{1}/search", awsCloudSearchId, apiVersion);
-            _documentUri = string.Format("http://doc-{0}/{1}/documents/batch", awsCloudSearchId, apiVersion);
+            _cloudSearchSettings = cloudSearchSettings;
+            _queryBuilder = queryBuilder;
+        }
+
+        public CloudSearch(ICloudSearchSettings cloudSearchSettings)
+        {
+            _cloudSearchSettings = cloudSearchSettings;
+            _searchUri = string.Format("http://search-{0}/{1}/search", _cloudSearchSettings.CloudSearchId, _cloudSearchSettings.ApiVersion);
+            _documentUri = string.Format("http://doc-{0}/{1}/documents/batch", _cloudSearchSettings.CloudSearchId, _cloudSearchSettings.ApiVersion);
             _actionBuilder = new ActionBuilder<TDocument>();
             _queryBuilder = new QueryBuilder<TDocument>(_searchUri);
             _webHelper = new WebHelper();
             _hitFeeder = new HitFeeder<TDocument>();
             _facetBuilder = new FacetBuilder();
+        }
+
+        public CloudSearch(string awsCloudSearchId, string apiVersion) : this (new CloudSearchSettings(){ApiVersion = apiVersion, CloudSearchId = awsCloudSearchId})
+        {                                    
         }
 
         TResult Add<TResult>(IEnumerable<TDocument> liToAdd) where TResult : BasicResult, new()

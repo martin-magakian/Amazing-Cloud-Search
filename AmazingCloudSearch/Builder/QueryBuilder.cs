@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using AmazingCloudSearch.Contract;
 using AmazingCloudSearch.Query;
 using AmazingCloudSearch.Query.Boolean;
@@ -10,18 +9,21 @@ using AmazingCloudSearch.Query.Facets;
 
 namespace AmazingCloudSearch.Builder
 {
-    /*
-     * 
+    /*     
      * The rules when building the URL string it that ONLY function who write
-     * in the string add the & at the end of it.
-     * 
+     * in the string add the & at the end of it.    
      */
+    public interface IQueryBuilder<T> where T : ISearchDocument, new() {
+        string BuildSearchQuery(SearchQuery<T> query);
+        string BuildFromPublicSearchQuery(string publicSearchQueryString, SearchQuery<T> query);
+        string BuildPublicSearchQuery(SearchQuery<T> query);
+    }
 
-    public class QueryBuilder<T> where T : ISearchDocument, new()
+    public class QueryBuilder<T> : IQueryBuilder<T> where T : ISearchDocument, new()
     {
         readonly string _searchUri;
-        static readonly Regex plusRegex = new Regex(@"\++", RegexOptions.Compiled);
-        static readonly Regex urlEncodedSpaceRegex = new Regex(@"%20+", RegexOptions.Compiled);
+
+        public QueryBuilder() {}
 
         public QueryBuilder(string searchUri)
         {
@@ -102,7 +104,7 @@ namespace AmazingCloudSearch.Builder
             return url.ToString();
         }
 
-        void FeedKeyword(string keyword, StringBuilder url)
+        public void FeedKeyword(string keyword, StringBuilder url)
         {
             if (!string.IsNullOrEmpty(keyword))
             {
@@ -111,18 +113,18 @@ namespace AmazingCloudSearch.Builder
             }
         }
 
-        void FeedBooleanCritera(BooleanQuery booleanQuery, StringBuilder url)
+        public void FeedBooleanCritera(BooleanQuery booleanQuery, StringBuilder url)
         {
             if (booleanQuery.Conditions == null || booleanQuery.Conditions.Count == 0)
             {
                 return;
             }
 
-            bool hasParameters = (url.Length > 0);
+            var hasParameters = (url.Length > 0);
 
-            StringBuilder andConditions = new StringBuilder();
-            StringBuilder orConditions = new StringBuilder();
-            List<string> listOrCondintions = new List<string>();
+            var andConditions = new StringBuilder();
+            var orConditions = new StringBuilder();
+            var listOrCondintions = new List<string>();
 
             foreach (var condition in booleanQuery.Conditions)
             {
@@ -137,7 +139,7 @@ namespace AmazingCloudSearch.Builder
                 }
             }
 
-            List<string> booleanConditions = new List<string>();
+            var booleanConditions = new List<string>();
 
             if (andConditions.Length > 0)
             {
@@ -196,7 +198,7 @@ namespace AmazingCloudSearch.Builder
             url.Append(postpendBooleanCondition);
         }
 
-        void FeedStartResultFrom(int? start, StringBuilder url)
+        public void FeedStartResultFrom(int? start, StringBuilder url)
         {
             if (start != null)
             {
@@ -206,7 +208,7 @@ namespace AmazingCloudSearch.Builder
             }
         }
 
-        void FeedMaxResults(int? size, StringBuilder url)
+        public void FeedMaxResults(int? size, StringBuilder url)
         {
             if (size != null)
             {
@@ -216,14 +218,14 @@ namespace AmazingCloudSearch.Builder
             }
         }
 
-        void FeedFacet(List<Facet> facets, StringBuilder url)
+        public void FeedFacet(List<Facet> facets, StringBuilder url)
         {
             FeedFacetList(facets, url);
 
             FeedFacetConstraints(facets, url);
         }
 
-        void FeedFacetList(List<Facet> facets, StringBuilder url)
+        public void FeedFacetList(List<Facet> facets, StringBuilder url)
         {
             if (facets == null || facets.Count == 0)
             {
@@ -244,14 +246,14 @@ namespace AmazingCloudSearch.Builder
             {
                 url.Append(facet.Name);
 
-                if (!object.ReferenceEquals(lastItem, facet))
+                if (!ReferenceEquals(lastItem, facet))
                 {
                     url.Append(",");
                 }
             }
         }
 
-        void FeedFacetConstraints(List<Facet> facets, StringBuilder url)
+        public void FeedFacetConstraints(List<Facet> facets, StringBuilder url)
         {
             if (facets == null || facets.Count == 0)
             {
@@ -264,7 +266,7 @@ namespace AmazingCloudSearch.Builder
             }
         }
 
-        void FeedFacet(Facet facet, StringBuilder url)
+        public void FeedFacet(Facet facet, StringBuilder url)
         {
             if (string.IsNullOrEmpty(facet.Name))
             {
@@ -294,7 +296,7 @@ namespace AmazingCloudSearch.Builder
             }
         }
 
-        void FeedReturnFields(List<string> fields, StringBuilder url)
+        public void FeedReturnFields(List<string> fields, StringBuilder url)
         {
             if (fields == null || fields.Count == 0)
             {
