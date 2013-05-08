@@ -1,22 +1,17 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Text;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
-using AmazingCloudSearch;
 using AmazingCloudSearch.Query;
 using AmazingCloudSearch.Query.Boolean;
 using AmazingCloudSearch.Query.Facets;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
-namespace TestProject1
+namespace AmazingCloudSearch.Test
 {
-    [TestClass]
-    public class UnitTest1
+    [TestFixture]
+    public class RoundTripSmokeTests
     {
-
-        [TestMethod]
+        [Test]
         public void TestSearch()
         {
             var cloudSearch = new CloudSearch<Movie>("YOU_AMAZON_CLOUD_SEARCH_KEY", "2011-02-01");
@@ -59,10 +54,7 @@ namespace TestProject1
             Assert.AreEqual(found.facetsResults.Count, 2, "We request only the top 2 facet");
         }
 
-
-
-
-        [TestMethod]
+        [Test]
         public void TestCRUD()
         {
             var cloudSearch = new CloudSearch<Movie>("YOU_AMAZON_CLOUD_SEARCH_KEY", "2011-02-01");

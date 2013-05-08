@@ -11,60 +11,59 @@ using Newtonsoft.Json;
 
 namespace AmazingCloudSearch
 {
-    public class CloudSearch<T> where T : ISearchDocument, new()
+    public class CloudSearch<TDocument> where TDocument : ISearchDocument, new()
     {
         readonly string _documentUri;
         readonly string _searchUri;
-        readonly ActionBuilder<T> _actionBuilder;
+        readonly ActionBuilder<TDocument> _actionBuilder;
         readonly WebHelper _webHelper;
-        readonly QueryBuilder<T> _queryBuilder;
-        readonly HitFeeder<T> _hitFeeder;
+        readonly QueryBuilder<TDocument> _queryBuilder;
+        readonly HitFeeder<TDocument> _hitFeeder;
         readonly FacetBuilder _facetBuilder;
 
         public CloudSearch(string awsCloudSearchId, string apiVersion)
         {
             _searchUri = string.Format("http://search-{0}/{1}/search", awsCloudSearchId, apiVersion);
             _documentUri = string.Format("http://doc-{0}/{1}/documents/batch", awsCloudSearchId, apiVersion);
-            _actionBuilder = new ActionBuilder<T>();
-            _queryBuilder = new QueryBuilder<T>(_searchUri);
+            _actionBuilder = new ActionBuilder<TDocument>();
+            _queryBuilder = new QueryBuilder<TDocument>(_searchUri);
             _webHelper = new WebHelper();
-            _hitFeeder = new HitFeeder<T>();
+            _hitFeeder = new HitFeeder<TDocument>();
             _facetBuilder = new FacetBuilder();
         }
 
-        R Add<R>(List<T> liToAdd) where R : BasicResult, new()
+        TResult Add<TResult>(IEnumerable<TDocument> liToAdd) where TResult : BasicResult, new()
         {
-            List<BasicDocumentAction> liAction = new List<BasicDocumentAction>();
+            var liAction = new List<BasicDocumentAction>();
 
-            BasicDocumentAction action;
-            foreach (T toAdd in liToAdd)
+            foreach (var toAdd in liToAdd)
             {
-                action = _actionBuilder.BuildAction(toAdd, ActionType.ADD);
+                var action = _actionBuilder.BuildAction(toAdd, ActionType.ADD);
                 liAction.Add(action);
             }
 
-            return PerformDocumentAction<R>(liAction);
+            return PerformDocumentAction<TResult>(liAction);
         }
 
-        R Add<R>(T toAdd) where R : BasicResult, new()
+        TResult Add<TResult>(TDocument toAdd) where TResult : BasicResult, new()
         {
             var action = _actionBuilder.BuildAction(toAdd, ActionType.ADD);
 
-            return PerformDocumentAction<R>(action);
+            return PerformDocumentAction<TResult>(action);
         }
 
-        public AddResult Add(List<T> toAdd)
+        public AddResult Add(List<TDocument> toAdd)
         {
             return Add<AddResult>(toAdd);
         }
 
-        public AddResult Add(T toAdd)
+        public AddResult Add(TDocument toAdd)
         {
             return Add<AddResult>(toAdd);
         }
 
         // update is like Add but make more sense for a developper point of view
-        public UpdateResult Update(T toUpdate)
+        public UpdateResult Update(TDocument toUpdate)
         {
             return Add<UpdateResult>(toUpdate);
         }
@@ -76,7 +75,7 @@ namespace AmazingCloudSearch
             return PerformDocumentAction<DeleteResult>(action);
         }
 
-        public SearchResult<T> Search(SearchQuery<T> query)
+        public SearchResult<TDocument> Search(SearchQuery<TDocument> query)
         {
             try
             {
@@ -84,11 +83,11 @@ namespace AmazingCloudSearch
             }
             catch (Exception ex)
             {
-                return new SearchResult<T> {error = "An error occured " + ex.Message, IsError = true};
+                return new SearchResult<TDocument> {error = "An error occured " + ex.Message, IsError = true};
             }
         }
 
-        SearchResult<T> SearchWithException(SearchQuery<T> query)
+        SearchResult<TDocument> SearchWithException(SearchQuery<TDocument> query)
         {
             var searchUrlRequest = _queryBuilder.BuildSearchQuery(query);
 
@@ -96,7 +95,7 @@ namespace AmazingCloudSearch
 
             if (jsonResult.IsError)
             {
-                return new SearchResult<T> {error = jsonResult.exeption, IsError = true};
+                return new SearchResult<TDocument> {error = jsonResult.exeption, IsError = true};
             }
 
             var jsonDynamic = JsonConvert.DeserializeObject<dynamic>(jsonResult.json);
@@ -105,7 +104,7 @@ namespace AmazingCloudSearch
 
             var resultWithoutHit = JsonConvert.SerializeObject(jsonDynamic);
 
-            SearchResult<T> searchResult = JsonConvert.DeserializeObject<SearchResult<T>>(resultWithoutHit);
+            SearchResult<TDocument> searchResult = JsonConvert.DeserializeObject<SearchResult<TDocument>>(resultWithoutHit);
 
             searchResult.facetsResults = _facetBuilder.BuildFacet(jsonDynamic);
 
@@ -132,18 +131,18 @@ namespace AmazingCloudSearch
         }
 
 
-        R PerformDocumentAction<R>(List<BasicDocumentAction> liAction) where R : BasicResult, new()
+        TResult PerformDocumentAction<TResult>(List<BasicDocumentAction> liAction) where TResult : BasicResult, new()
         {
-            string actionJson = JsonConvert.SerializeObject(liAction);
+            var actionJson = JsonConvert.SerializeObject(liAction);
 
             var jsonResult = _webHelper.PostRequest(_documentUri, actionJson);
 
             if (jsonResult.IsError)
             {
-                return new R {IsError = true, status = "error", errors = new List<Error> {new Error {message = jsonResult.exeption}}};
+                return new TResult {IsError = true, status = "error", errors = new List<Error> {new Error {message = jsonResult.exeption}}};
             }
 
-            R result = JsonConvert.DeserializeObject<R>(jsonResult.json);
+            var result = JsonConvert.DeserializeObject<TResult>(jsonResult.json);
 
             if (result.status != null && result.status.Equals("error"))
             {
@@ -153,11 +152,11 @@ namespace AmazingCloudSearch
             return result;
         }
 
-        R PerformDocumentAction<R>(BasicDocumentAction basicDocumentAction) where R : BasicResult, new()
+        TResult PerformDocumentAction<TResult>(BasicDocumentAction basicDocumentAction) where TResult : BasicResult, new()
         {
             var listAction = new List<BasicDocumentAction> {basicDocumentAction};
 
-            return PerformDocumentAction<R>(listAction);
+            return PerformDocumentAction<TResult>(listAction);
         }
     }
 }
