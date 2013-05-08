@@ -34,7 +34,9 @@ namespace AmazingCloudSearch.Query.Facets
             {
                 s.Append(Constraint[i]);
                 if (Constraint.Count != i)
+                {
                     s.Append(",");
+                }
             }
             return s.ToString();
         }

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace AmazingCloudSearch.Helper
 {
@@ -17,6 +14,6 @@ namespace AmazingCloudSearch.Helper
             long ticks = DateTime.UtcNow.Ticks - DateTime.Parse("01/01/1970 00:00:00").Ticks;
             ticks /= 10000000; //Convert windows ticks to seconds
             return (int) ticks;
-        } 
+        }
     }
 }

@@ -6,12 +6,11 @@ namespace AmazingCloudSearch.Builder
 {
     public class ActionBuilder<T> where T : ISearchDocument
     {
-
         public AddUpldateBasicDocumentAction<T> BuildAction(T document, ActionType actionType, int version)
         {
-            var type = ActionTypeFunction.ActionTypeToString(actionType);
+            string type = ActionTypeFunction.ActionTypeToString(actionType);
 
-            return new AddUpldateBasicDocumentAction<T> { type = type, id = document.id, lang = "en", fields = document, version = version };
+            return new AddUpldateBasicDocumentAction<T> {type = type, id = document.id, lang = "en", fields = document, version = version};
         }
 
         public AddUpldateBasicDocumentAction<T> BuildAction(T document, ActionType actionType)
@@ -21,12 +20,11 @@ namespace AmazingCloudSearch.Builder
             return BuildAction(document, actionType, version);
         }
 
-
         public BasicDocumentAction BuildDeleteAction(ISearchDocument document, ActionType actionType, int version)
         {
-            var type = ActionTypeFunction.ActionTypeToString(actionType);
+            string type = ActionTypeFunction.ActionTypeToString(actionType);
 
-            return new BasicDocumentAction { type = type, id = document.id, version = version };
+            return new BasicDocumentAction {type = type, id = document.id, version = version};
         }
 
         public BasicDocumentAction BuildDeleteAction(ISearchDocument document, ActionType actionType)

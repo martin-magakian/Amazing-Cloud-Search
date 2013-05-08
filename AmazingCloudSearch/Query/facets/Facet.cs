@@ -1,5 +1,3 @@
-using AmazingCloudSearch.Query;
-
 namespace AmazingCloudSearch.Query.Facets
 {
     public class Facet

@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Builder\ActionBuilder.cs" />
+    <Compile Include="CloudSearch.cs" />
     <Compile Include="Contract\Facet\Constraint.cs" />
     <Compile Include="Contract\Facet\Constraints.cs" />
     <Compile Include="Contract\Result\FacetResult.cs" />
@@ -78,7 +79,6 @@
     <Compile Include="Helper\WebHelper.cs" />
     <Compile Include="Builder\QueryBuilder.cs" />
     <Compile Include="Contract\Result\AddResult.cs" />
-    <Compile Include="CloudSearch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Contract\Result\DeleteResult.cs" />
     <Compile Include="Contract\Result\BasicResult.cs" />

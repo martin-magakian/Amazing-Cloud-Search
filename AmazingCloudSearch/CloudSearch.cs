@@ -11,16 +11,15 @@ using Newtonsoft.Json;
 
 namespace AmazingCloudSearch
 {
-
     public class CloudSearch<T> where T : ISearchDocument, new()
     {
-        private string _documentUri;
-        private string _searchUri;
-        private ActionBuilder<T> _actionBuilder;
-        private WebHelper _webHelper;
-        private QueryBuilder<T> _queryBuilder;
-        private HitFeeder<T> _hitFeeder;
-        private FacetBuilder _facetBuilder;
+        readonly string _documentUri;
+        readonly string _searchUri;
+        readonly ActionBuilder<T> _actionBuilder;
+        readonly WebHelper _webHelper;
+        readonly QueryBuilder<T> _queryBuilder;
+        readonly HitFeeder<T> _hitFeeder;
+        readonly FacetBuilder _facetBuilder;
 
         public CloudSearch(string awsCloudSearchId, string apiVersion)
         {
@@ -33,31 +32,31 @@ namespace AmazingCloudSearch
             _facetBuilder = new FacetBuilder();
         }
 
-		private R Add<R>(List<T> liToAdd) where R : BasicResult, new()
-		{
-			List<BasicDocumentAction> liAction = new List<BasicDocumentAction>();
+        R Add<R>(List<T> liToAdd) where R : BasicResult, new()
+        {
+            List<BasicDocumentAction> liAction = new List<BasicDocumentAction>();
 
-			BasicDocumentAction action;
-			foreach (T toAdd in liToAdd)
-			{
-				action = _actionBuilder.BuildAction(toAdd, ActionType.ADD);
-				liAction.Add(action);
-			}
+            BasicDocumentAction action;
+            foreach (T toAdd in liToAdd)
+            {
+                action = _actionBuilder.BuildAction(toAdd, ActionType.ADD);
+                liAction.Add(action);
+            }
 
-			return PerformDocumentAction<R>(liAction);
-		}
+            return PerformDocumentAction<R>(liAction);
+        }
 
-        private R Add<R>(T toAdd) where R : BasicResult, new()
+        R Add<R>(T toAdd) where R : BasicResult, new()
         {
             var action = _actionBuilder.BuildAction(toAdd, ActionType.ADD);
 
             return PerformDocumentAction<R>(action);
         }
 
-		public AddResult Add(List<T> toAdd)
-		{
-			return Add<AddResult>(toAdd);
-		}
+        public AddResult Add(List<T> toAdd)
+        {
+            return Add<AddResult>(toAdd);
+        }
 
         public AddResult Add(T toAdd)
         {
@@ -72,7 +71,7 @@ namespace AmazingCloudSearch
 
         public DeleteResult Delete(ISearchDocument toDelete)
         {
-            var action = _actionBuilder.BuildDeleteAction(new SearchDocument { id = toDelete.id }, ActionType.DELETE);
+            var action = _actionBuilder.BuildDeleteAction(new SearchDocument {id = toDelete.id}, ActionType.DELETE);
 
             return PerformDocumentAction<DeleteResult>(action);
         }
@@ -82,20 +81,23 @@ namespace AmazingCloudSearch
             try
             {
                 return SearchWithException(query);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
-                return new SearchResult<T>{error = "An error occured "+ ex.Message, IsError = true};
+                return new SearchResult<T> {error = "An error occured " + ex.Message, IsError = true};
             }
         }
 
-        private SearchResult<T> SearchWithException(SearchQuery<T> query)
+        SearchResult<T> SearchWithException(SearchQuery<T> query)
         {
             var searchUrlRequest = _queryBuilder.BuildSearchQuery(query);
 
             var jsonResult = _webHelper.GetRequest(searchUrlRequest);
 
             if (jsonResult.IsError)
+            {
                 return new SearchResult<T> {error = jsonResult.exeption, IsError = true};
+            }
 
             var jsonDynamic = JsonConvert.DeserializeObject<dynamic>(jsonResult.json);
 
@@ -112,13 +114,13 @@ namespace AmazingCloudSearch
                 searchResult.IsError = true;
                 return searchResult;
             }
-            
+
             _hitFeeder.Feed(searchResult, hit);
 
             return searchResult;
         }
 
-        private dynamic RemoveHit(dynamic jsonDynamic)
+        dynamic RemoveHit(dynamic jsonDynamic)
         {
             dynamic hit = null;
             if (jsonDynamic.hits != null)
@@ -130,26 +132,30 @@ namespace AmazingCloudSearch
         }
 
 
-        private R PerformDocumentAction<R>(List<BasicDocumentAction> liAction) where R : BasicResult, new()
+        R PerformDocumentAction<R>(List<BasicDocumentAction> liAction) where R : BasicResult, new()
         {
             string actionJson = JsonConvert.SerializeObject(liAction);
 
             var jsonResult = _webHelper.PostRequest(_documentUri, actionJson);
 
             if (jsonResult.IsError)
-                return new R { IsError = true, status = "error", errors = new List<Error> { new Error { message = jsonResult.exeption } } };
+            {
+                return new R {IsError = true, status = "error", errors = new List<Error> {new Error {message = jsonResult.exeption}}};
+            }
 
             R result = JsonConvert.DeserializeObject<R>(jsonResult.json);
 
             if (result.status != null && result.status.Equals("error"))
+            {
                 result.IsError = true;
+            }
 
             return result;
         }
 
-        private R PerformDocumentAction<R>(BasicDocumentAction basicDocumentAction) where R : BasicResult, new()
+        R PerformDocumentAction<R>(BasicDocumentAction basicDocumentAction) where R : BasicResult, new()
         {
-            var listAction = new List<BasicDocumentAction> { basicDocumentAction };
+            var listAction = new List<BasicDocumentAction> {basicDocumentAction};
 
             return PerformDocumentAction<R>(listAction);
         }
