@@ -37,5 +37,21 @@ namespace AmazingCloudSearch.Test.Builder
             _queryBuilder.FeedKeyword("@", url);
             url.ToString().ShouldStartWith("q=%40");        
         }
+
+        [Test]
+        public void ShouldNotDoAnythingIfTheKeywordIsEmpty()
+        {
+            var url = new StringBuilder("test");
+            _queryBuilder.FeedKeyword(string.Empty, url);
+            url.ToString().ShouldEqual("test");
+        }
+
+        [Test]
+        public void ShouldNotDoAnythingIfTheKeywordIsNull()
+        {
+            var url = new StringBuilder("test");
+            _queryBuilder.FeedKeyword(null, url);
+            url.ToString().ShouldEqual("test");
+        }
     }
 }
