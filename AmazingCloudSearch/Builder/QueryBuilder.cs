@@ -124,13 +124,13 @@ namespace AmazingCloudSearch.Builder
 
             var andConditions = new StringBuilder();
             var orConditions = new StringBuilder();
-            var listOrCondintions = new List<string>();
+            var listOrConditions = new List<string>();
 
             foreach (var condition in booleanQuery.Conditions)
             {
                 if (condition.IsOrCondition())
                 {
-                    listOrCondintions.Add(condition.GetConditionParam());
+                    listOrConditions.Add(condition.GetConditionParam());
                 }
                 else
                 {
@@ -150,19 +150,19 @@ namespace AmazingCloudSearch.Builder
             if (orConditions.Length > 0)
             {
                 orConditions.Remove(orConditions.Length - 1, 1);
-                listOrCondintions.Add(orConditions.ToString());
+                listOrConditions.Add(orConditions.ToString());
             }
 
-            if (listOrCondintions.Count == 1)
+            if (listOrConditions.Count == 1)
             {
-                booleanConditions.Add("or+" + listOrCondintions[0]);
+                booleanConditions.Add("or+" + listOrConditions[0]);
             }
-            else if (listOrCondintions.Count > 1)
+            else if (listOrConditions.Count > 1)
             {
                 orConditions.Clear();
                 orConditions.Append("and");
 
-                foreach (string listOrCondintion in listOrCondintions)
+                foreach (string listOrCondintion in listOrConditions)
                 {
                     orConditions.Append("+(or+");
                     orConditions.Append(listOrCondintion);
