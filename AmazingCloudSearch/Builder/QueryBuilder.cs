@@ -130,11 +130,11 @@ namespace AmazingCloudSearch.Builder
             {
                 if (condition.IsOrCondition())
                 {
-                    listOrCondintions.Add(condition.GetCondictionParam());
+                    listOrCondintions.Add(condition.GetConditionParam());
                 }
                 else
                 {
-                    andConditions.Append(condition.GetCondictionParam());
+                    andConditions.Append(condition.GetConditionParam());
                     andConditions.Append("+");
                 }
             }

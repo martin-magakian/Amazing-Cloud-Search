@@ -16,7 +16,7 @@ namespace AmazingCloudSearch.Query.Boolean
             IsOrConditionParam = isOrConditionParam;
         }
 
-        public string GetCondictionParam()
+        public string GetConditionParam()
         {
             StringBuilder condictionParam = new StringBuilder();
 

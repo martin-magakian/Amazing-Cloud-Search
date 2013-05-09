@@ -33,7 +33,7 @@
             Condition = GetInterval(null, to);
         }
 
-        public string GetCondictionParam()
+        public string GetConditionParam()
         {
             return Field + "%3A" + Condition;
         }
