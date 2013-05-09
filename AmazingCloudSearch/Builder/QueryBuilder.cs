@@ -126,18 +126,7 @@ namespace AmazingCloudSearch.Builder
             var orConditions = new StringBuilder();
             var listOrConditions = new List<string>();
 
-            foreach (var condition in booleanQuery.Conditions)
-            {
-                if (condition.IsOrCondition())
-                {
-                    listOrConditions.Add(condition.GetConditionParam());
-                }
-                else
-                {
-                    andConditions.Append(condition.GetConditionParam());
-                    andConditions.Append("+");
-                }
-            }
+            SplitConditions(booleanQuery, listOrConditions, andConditions);
 
             var booleanConditions = new List<string>();
 
@@ -196,6 +185,22 @@ namespace AmazingCloudSearch.Builder
             }
 
             url.Append(postpendBooleanCondition);
+        }
+
+        public void SplitConditions(BooleanQuery booleanQuery, List<string> listOrConditions, StringBuilder andConditions)
+        {
+            foreach (var condition in booleanQuery.Conditions)
+            {
+                if (condition.IsOrCondition())
+                {
+                    listOrConditions.Add(condition.GetConditionParam());
+                }
+                else
+                {
+                    andConditions.Append(condition.GetConditionParam());
+                    andConditions.Append("+");
+                }
+            }
         }
 
         public void FeedStartResultFrom(int? start, StringBuilder url)
