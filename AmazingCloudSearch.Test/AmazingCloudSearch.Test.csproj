@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Builder\QueryBuilderTester.cs" />
     <Compile Include="InteractionContext.cs" />
+    <Compile Include="Query\StringBooleanConditionTester.cs" />
     <Compile Include="SpecificationExtensions.cs" />
     <Compile Include="TestMovie.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
