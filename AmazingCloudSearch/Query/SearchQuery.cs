@@ -8,12 +8,7 @@ using AmazingCloudSearch.Query.Facets;
 namespace AmazingCloudSearch.Query
 {
     public class SearchQuery<T> where T : ISearchDocument, new()
-    {
-        public SearchQuery()
-        {
-            BooleanQuery = new BooleanQuery();
-        }
-
+    {        
         public BooleanQuery BooleanQuery { get; set; }
 
         public string Keyword { get; set; }
@@ -30,9 +25,11 @@ namespace AmazingCloudSearch.Query
 
         public SearchQuery(bool buildFieldsFromType = true)
         {
+            BooleanQuery = new BooleanQuery();
             if (buildFieldsFromType)
             {
                 BuildPropertiesArray(new ListProperties<T>().GetProperties());
+                
             }
         }
 

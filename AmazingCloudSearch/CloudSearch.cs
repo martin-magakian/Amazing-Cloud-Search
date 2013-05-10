@@ -64,7 +64,7 @@ namespace AmazingCloudSearch
         {
         }
 
-        public SearchResult<TDocument> Search(SearchQuery<TDocument> query)
+        public override SearchResult<TDocument> Search(SearchQuery<TDocument> query)
         {
             try
             {                
@@ -107,18 +107,17 @@ namespace AmazingCloudSearch
         {
             _multiTenantCloudSearchSettings = multiTenantCloudSearchSettings;
             _queryBuilder = queryBuilder;
-        }
-
-        public CloudSearch(ICloudSearchSettings multiTenantCloudSearchSettings)
-        {
-            _multiTenantCloudSearchSettings = multiTenantCloudSearchSettings;
+            
             _searchUri = string.Format("http://search-{0}/{1}/search", _multiTenantCloudSearchSettings.CloudSearchId, _multiTenantCloudSearchSettings.ApiVersion);
             _documentUri = string.Format("http://doc-{0}/{1}/documents/batch", _multiTenantCloudSearchSettings.CloudSearchId, _multiTenantCloudSearchSettings.ApiVersion);
-            _actionBuilder = new ActionBuilder<TDocument>();
-            _queryBuilder = new QueryBuilder<TDocument>(_searchUri);
+            _actionBuilder = new ActionBuilder<TDocument>();            
             _webHelper = new WebHelper();
             _hitFeeder = new HitFeeder<TDocument>();
             _facetBuilder = new FacetBuilder();
+        }
+
+        public CloudSearch(ICloudSearchSettings multiTenantCloudSearchSettings) : this (multiTenantCloudSearchSettings, new QueryBuilder<TDocument>(multiTenantCloudSearchSettings))
+        {
         }
 
         public CloudSearch(string awsCloudSearchId, string apiVersion) : this (new CloudSearchSettings(){ApiVersion = apiVersion, CloudSearchId = awsCloudSearchId})
@@ -168,7 +167,7 @@ namespace AmazingCloudSearch
             return PerformDocumentAction<DeleteResult>(action);
         }
 
-        public SearchResult<TDocument> Search(SearchQuery<TDocument> query)
+        public virtual SearchResult<TDocument> Search(SearchQuery<TDocument> query)
         {
             try
             {
