@@ -130,11 +130,7 @@ namespace AmazingCloudSearch.Builder
 
             var booleanConditions = new List<string>();
 
-            if (andConditions.Length > 0)
-            {
-                andConditions.Remove(andConditions.Length - 1, 1);
-                booleanConditions.Add("and+" + andConditions);
-            }
+            AddConjunctionConditionsToBooleanConditions(andConditions, booleanConditions);
 
             if (orConditions.Length > 0)
             {
@@ -185,6 +181,15 @@ namespace AmazingCloudSearch.Builder
             }
 
             url.Append(postpendBooleanCondition);
+        }
+
+        public void AddConjunctionConditionsToBooleanConditions(StringBuilder andConditions, List<string> booleanConditions)
+        {
+            if (andConditions.Length > 0)
+            {
+                andConditions.Remove(andConditions.Length - 1, 1);
+                booleanConditions.Add("and+" + andConditions);
+            }
         }
 
         public void SplitConditions(BooleanQuery booleanQuery, List<string> listOrConditions, StringBuilder andConditions)

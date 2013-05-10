@@ -6,6 +6,7 @@ using AmazingCloudSearch.Contract.Result;
 using AmazingCloudSearch.Enum;
 using AmazingCloudSearch.Helper;
 using AmazingCloudSearch.Query;
+using AmazingCloudSearch.Query.Boolean;
 using AmazingCloudSearch.Serialization;
 using Newtonsoft.Json;
 
@@ -17,34 +18,102 @@ namespace AmazingCloudSearch
         string ApiVersion { get; set; }
     }
 
+    public interface IMultiTenantCloudSearchSettings : ICloudSearchSettings
+    {
+        string TenantParameterName { get; set; }
+        string Tenant { get; set; }
+    }
+
     public class CloudSearchSettings : ICloudSearchSettings
     {
         public string CloudSearchId { get; set; }
         public string ApiVersion { get; set; }
     }
 
-    public class CloudSearch<TDocument> where TDocument : ISearchDocument, new()
+    public class MultiTenantCloudSearchSettings : CloudSearchSettings, IMultiTenantCloudSearchSettings
+    {
+        public string TenantParameterName { get; set; }
+        public string Tenant { get; set; }
+    }
+
+    public interface ICloudSearch<TDocument> where TDocument : ISearchDocument, new()
+    {
+        AddResult Add(List<TDocument> toAdd);
+        AddResult Add(TDocument toAdd);
+        UpdateResult Update(TDocument toUpdate);
+        DeleteResult Delete(ISearchDocument toDelete);
+        SearchResult<TDocument> Search(SearchQuery<TDocument> query);
+    }
+
+    public class MultiTenantCloudSearch<TDocument> : CloudSearch<TDocument> where TDocument : ISearchDocument, new()
+    {
+        private readonly IMultiTenantCloudSearchSettings _multiTenantCloudSearchSettings;
+
+        public MultiTenantCloudSearch(IMultiTenantCloudSearchSettings multiTenantCloudSearchSettings, IQueryBuilder<TDocument> queryBuilder) : base(multiTenantCloudSearchSettings, queryBuilder)
+        {
+            _multiTenantCloudSearchSettings = multiTenantCloudSearchSettings;
+        }
+
+        public MultiTenantCloudSearch(IMultiTenantCloudSearchSettings multiTenantCloudSearchSettings)
+            : base(multiTenantCloudSearchSettings)
+        {
+            _multiTenantCloudSearchSettings = multiTenantCloudSearchSettings;
+        }
+
+        public MultiTenantCloudSearch(string awsCloudSearchId, string apiVersion) : base(awsCloudSearchId, apiVersion)
+        {
+        }
+
+        public SearchResult<TDocument> Search(SearchQuery<TDocument> query)
+        {
+            try
+            {                
+                var tenantCondition = CreateTenantBooleanCondition();
+                AddTenantBooleanConditionToQuery(tenantCondition, query);                
+                return SearchWithException(query);
+            }
+            catch (Exception ex)
+            {
+                return new SearchResult<TDocument> { error = "An error occured " + ex.Message, IsError = true };
+            }
+        }
+
+        public SearchQuery<TDocument> AddTenantBooleanConditionToQuery(StringBooleanCondition tenantCondition, SearchQuery<TDocument> query)
+        {
+            query.BooleanQuery.Conditions.Add(tenantCondition);
+            return query;
+        }
+
+        public StringBooleanCondition CreateTenantBooleanCondition()
+        {
+            var returnValue = new StringBooleanCondition(_multiTenantCloudSearchSettings.TenantParameterName,
+                                                         _multiTenantCloudSearchSettings.Tenant);
+            return returnValue;
+        }
+    }
+
+    public class CloudSearch<TDocument> : ICloudSearch<TDocument> where TDocument : ISearchDocument, new()
     {
         readonly string _documentUri;
         readonly string _searchUri;
         readonly ActionBuilder<TDocument> _actionBuilder;
         readonly WebHelper _webHelper;
-        readonly ICloudSearchSettings _cloudSearchSettings;
+        readonly ICloudSearchSettings _multiTenantCloudSearchSettings;
         readonly IQueryBuilder<TDocument> _queryBuilder;
         readonly HitFeeder<TDocument> _hitFeeder;
         readonly FacetBuilder _facetBuilder;
 
-        public CloudSearch(ICloudSearchSettings cloudSearchSettings, IQueryBuilder<TDocument> queryBuilder)
+        public CloudSearch(ICloudSearchSettings multiTenantCloudSearchSettings, IQueryBuilder<TDocument> queryBuilder)
         {
-            _cloudSearchSettings = cloudSearchSettings;
+            _multiTenantCloudSearchSettings = multiTenantCloudSearchSettings;
             _queryBuilder = queryBuilder;
         }
 
-        public CloudSearch(ICloudSearchSettings cloudSearchSettings)
+        public CloudSearch(ICloudSearchSettings multiTenantCloudSearchSettings)
         {
-            _cloudSearchSettings = cloudSearchSettings;
-            _searchUri = string.Format("http://search-{0}/{1}/search", _cloudSearchSettings.CloudSearchId, _cloudSearchSettings.ApiVersion);
-            _documentUri = string.Format("http://doc-{0}/{1}/documents/batch", _cloudSearchSettings.CloudSearchId, _cloudSearchSettings.ApiVersion);
+            _multiTenantCloudSearchSettings = multiTenantCloudSearchSettings;
+            _searchUri = string.Format("http://search-{0}/{1}/search", _multiTenantCloudSearchSettings.CloudSearchId, _multiTenantCloudSearchSettings.ApiVersion);
+            _documentUri = string.Format("http://doc-{0}/{1}/documents/batch", _multiTenantCloudSearchSettings.CloudSearchId, _multiTenantCloudSearchSettings.ApiVersion);
             _actionBuilder = new ActionBuilder<TDocument>();
             _queryBuilder = new QueryBuilder<TDocument>(_searchUri);
             _webHelper = new WebHelper();
@@ -111,7 +180,7 @@ namespace AmazingCloudSearch
             }
         }
 
-        SearchResult<TDocument> SearchWithException(SearchQuery<TDocument> query)
+        public virtual SearchResult<TDocument> SearchWithException(SearchQuery<TDocument> query)
         {
             var searchUrlRequest = _queryBuilder.BuildSearchQuery(query);
 

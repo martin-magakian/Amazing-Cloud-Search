@@ -120,4 +120,22 @@ namespace AmazingCloudSearch.Test.Builder
             _listOrConditions.Count.ShouldEqual(0);
         }
     }
+
+    [TestFixture]
+    public class WhenAddingConjunctionConditionsToBooleanConditions
+    {
+        QueryBuilder<Movie> _queryBuilder;
+        BooleanQuery _booleanQuery;
+        List<string> _listOrConditions;
+        StringBuilder _andConditions;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _queryBuilder = new QueryBuilder<Movie>();
+            _booleanQuery = new BooleanQuery();
+            _listOrConditions = new List<string>();
+            _andConditions = new StringBuilder();
+        }        
+    }
 }
