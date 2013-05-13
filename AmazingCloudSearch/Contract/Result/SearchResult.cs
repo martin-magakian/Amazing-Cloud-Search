@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace AmazingCloudSearch.Contract.Result
 {
-    public class SearchResult<T> where T : ISearchDocument, new()
+    public class SearchResult<T> where T : ICloudSearchDocument, new()
     {
         public bool IsError { get; set; }
 

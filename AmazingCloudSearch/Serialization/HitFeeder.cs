@@ -8,7 +8,7 @@ using AmazingCloudSearch.Helper;
 
 namespace AmazingCloudSearch.Serialization
 {
-    internal class HitFeeder<T> where T : ISearchDocument, new()
+    internal class HitFeeder<T> where T : ICloudSearchDocument, new()
     {
         readonly JavaScriptSerializer _serializer;
         readonly ConvertArray _convertArray;

@@ -13,13 +13,13 @@ namespace AmazingCloudSearch.Builder
      * The rules when building the URL string it that ONLY function who write
      * in the string add the & at the end of it.    
      */
-    public interface IQueryBuilder<T> where T : ISearchDocument, new() {
+    public interface IQueryBuilder<T> where T : ICloudSearchDocument, new() {
         string BuildSearchQuery(SearchQuery<T> query);
         string BuildFromPublicSearchQuery(string publicSearchQueryString, SearchQuery<T> query);
         string BuildPublicSearchQuery(SearchQuery<T> query);
     }
 
-    public class QueryBuilder<T> : IQueryBuilder<T> where T : ISearchDocument, new()
+    public class QueryBuilder<T> : IQueryBuilder<T> where T : ICloudSearchDocument, new()
     {
         readonly ICloudSearchSettings _cloudSearchSettings;
         readonly string _searchUri;

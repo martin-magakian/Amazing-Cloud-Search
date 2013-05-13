@@ -36,16 +36,16 @@ namespace AmazingCloudSearch
         public string Tenant { get; set; }
     }
 
-    public interface ICloudSearch<TDocument> where TDocument : ISearchDocument, new()
+    public interface ICloudSearch<TDocument> where TDocument : ICloudSearchDocument, new()
     {
         AddResult Add(List<TDocument> toAdd);
         AddResult Add(TDocument toAdd);
         UpdateResult Update(TDocument toUpdate);
-        DeleteResult Delete(ISearchDocument toDelete);
+        DeleteResult Delete(ICloudSearchDocument toDelete);
         SearchResult<TDocument> Search(SearchQuery<TDocument> query);
     }
 
-    public class MultiTenantCloudSearch<TDocument> : CloudSearch<TDocument> where TDocument : ISearchDocument, new()
+    public class MultiTenantCloudSearch<TDocument> : CloudSearch<TDocument> where TDocument : ICloudSearchDocument, new()
     {
         private readonly IMultiTenantCloudSearchSettings _multiTenantCloudSearchSettings;
 
@@ -92,7 +92,7 @@ namespace AmazingCloudSearch
         }
     }
 
-    public class CloudSearch<TDocument> : ICloudSearch<TDocument> where TDocument : ISearchDocument, new()
+    public class CloudSearch<TDocument> : ICloudSearch<TDocument> where TDocument : ICloudSearchDocument, new()
     {
         readonly string _documentUri;
         readonly string _searchUri;
@@ -160,9 +160,9 @@ namespace AmazingCloudSearch
             return Add<UpdateResult>(toUpdate);
         }
 
-        public DeleteResult Delete(ISearchDocument toDelete)
+        public DeleteResult Delete(ICloudSearchDocument toDelete)
         {
-            var action = _actionBuilder.BuildDeleteAction(new SearchDocument {id = toDelete.id}, ActionType.DELETE);
+            var action = _actionBuilder.BuildDeleteAction(new CloudSearchDocument {id = toDelete.id}, ActionType.DELETE);
 
             return PerformDocumentAction<DeleteResult>(action);
         }

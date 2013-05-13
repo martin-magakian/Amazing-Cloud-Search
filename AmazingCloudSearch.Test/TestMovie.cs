@@ -6,7 +6,7 @@ using AmazingCloudSearch.Contract;
 namespace AmazingCloudSearch.Test
 {
     [DataContract]
-    public class Movie : SearchDocument
+    public class Movie : CloudSearchDocument
     {
         public List<string> actor { get; set; }
         public string director { get; set; }

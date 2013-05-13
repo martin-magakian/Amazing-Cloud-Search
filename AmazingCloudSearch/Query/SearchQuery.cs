@@ -7,7 +7,7 @@ using AmazingCloudSearch.Query.Facets;
 
 namespace AmazingCloudSearch.Query
 {
-    public class SearchQuery<T> where T : ISearchDocument, new()
+    public class SearchQuery<T> where T : ICloudSearchDocument, new()
     {        
         public BooleanQuery BooleanQuery { get; set; }
 
