@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Builder\ActionBuilder.cs" />
     <Compile Include="CloudSearch.cs" />
+    <Compile Include="Contract\AddUpdateBasicDocumentAction.cs" />
     <Compile Include="Contract\Facet\Constraint.cs" />
     <Compile Include="Contract\Facet\Constraints.cs" />
     <Compile Include="Contract\Result\FacetResult.cs" />
@@ -70,7 +71,6 @@
     <Compile Include="Helper\ConvertArray.cs" />
     <Compile Include="Helper\ListProperties.cs" />
     <Compile Include="Serialization\HitFeeder.cs" />
-    <Compile Include="Contract\AddUpldateBasicDocumentAction.cs" />
     <Compile Include="Contract\BasicDocumentAction.cs" />
     <Compile Include="Contract\SearchDocument.cs" />
     <Compile Include="Contract\Result\SearchResult.cs" />

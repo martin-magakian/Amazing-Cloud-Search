@@ -4,30 +4,30 @@ using AmazingCloudSearch.Helper;
 
 namespace AmazingCloudSearch.Builder
 {
-    public class ActionBuilder<T> where T : ISearchDocument
+    public class ActionBuilder<T> where T : ICloudSearchDocument
     {
-        public AddUpldateBasicDocumentAction<T> BuildAction(T document, ActionType actionType, int version)
+        public AddUpdatBasicDocumentAction<T> BuildAction(T document, ActionType actionType, int version)
         {
             string type = ActionTypeFunction.ActionTypeToString(actionType);
 
-            return new AddUpldateBasicDocumentAction<T> {type = type, id = document.id, lang = "en", fields = document, version = version};
+            return new AddUpdatBasicDocumentAction<T> {type = type, id = document.id, lang = "en", fields = document, version = version};
         }
 
-        public AddUpldateBasicDocumentAction<T> BuildAction(T document, ActionType actionType)
+        public AddUpdatBasicDocumentAction<T> BuildAction(T document, ActionType actionType)
         {
             int version = Timestamp.CurrentTimeStamp();
 
             return BuildAction(document, actionType, version);
         }
 
-        public BasicDocumentAction BuildDeleteAction(ISearchDocument document, ActionType actionType, int version)
+        public BasicDocumentAction BuildDeleteAction(ICloudSearchDocument document, ActionType actionType, int version)
         {
             string type = ActionTypeFunction.ActionTypeToString(actionType);
 
             return new BasicDocumentAction {type = type, id = document.id, version = version};
         }
 
-        public BasicDocumentAction BuildDeleteAction(ISearchDocument document, ActionType actionType)
+        public BasicDocumentAction BuildDeleteAction(ICloudSearchDocument document, ActionType actionType)
         {
             int version = Timestamp.CurrentTimeStamp();
 
