@@ -6,14 +6,14 @@ namespace AmazingCloudSearch.Builder
 {
     public class ActionBuilder<T> where T : ICloudSearchDocument
     {
-        public AddUpdatBasicDocumentAction<T> BuildAction(T document, ActionType actionType, int version)
+        public AddUpdateBasicDocumentAction<T> BuildAction(T document, ActionType actionType, int version)
         {
             string type = ActionTypeFunction.ActionTypeToString(actionType);
 
-            return new AddUpdatBasicDocumentAction<T> {type = type, id = document.id, lang = "en", fields = document, version = version};
+            return new AddUpdateBasicDocumentAction<T> {type = type, id = document.id, lang = "en", fields = document, version = version};
         }
 
-        public AddUpdatBasicDocumentAction<T> BuildAction(T document, ActionType actionType)
+        public AddUpdateBasicDocumentAction<T> BuildAction(T document, ActionType actionType)
         {
             int version = Timestamp.CurrentTimeStamp();
 
