@@ -1,4 +1,6 @@
-﻿using AmazingCloudSearch.Contract;
+﻿using System.Collections.Generic;
+using System.Linq;
+using AmazingCloudSearch.Contract;
 using AmazingCloudSearch.Enum;
 using AmazingCloudSearch.Helper;
 
@@ -32,6 +34,13 @@ namespace AmazingCloudSearch.Builder
             int version = Timestamp.CurrentTimeStamp();
 
             return BuildDeleteAction(document, actionType, version);
+        }
+
+        public IEnumerable<BasicDocumentAction> BuildDeleteAction(List<ICloudSearchDocument> documents, ActionType actionType)
+        {
+            int version = Timestamp.CurrentTimeStamp();
+
+            return documents.Select(x => BuildDeleteAction(x, actionType, version));
         }
     }
 }

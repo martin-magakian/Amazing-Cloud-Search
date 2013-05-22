@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using AmazingCloudSearch.Builder;
 using AmazingCloudSearch.Contract;
 using AmazingCloudSearch.Contract.Result;
@@ -42,6 +43,7 @@ namespace AmazingCloudSearch
         AddResult Add(TDocument toAdd);
         UpdateResult Update(TDocument toUpdate);
         DeleteResult Delete(ICloudSearchDocument toDelete);
+        DeleteResult Delete(List<ICloudSearchDocument> toDelete);
         SearchResult<TDocument> Search(SearchQuery<TDocument> query);
     }
 
@@ -165,6 +167,13 @@ namespace AmazingCloudSearch
             var action = _actionBuilder.BuildDeleteAction(new CloudSearchDocument {id = toDelete.id}, ActionType.DELETE);
 
             return PerformDocumentAction<DeleteResult>(action);
+        }
+
+        public DeleteResult Delete(List<ICloudSearchDocument> toDelete)
+        {
+            var action = toDelete.Select(x => _actionBuilder.BuildDeleteAction(new CloudSearchDocument { id = x.id }, ActionType.DELETE));
+
+            return PerformDocumentAction<DeleteResult>(action.ToList());
         }
 
         public virtual SearchResult<TDocument> Search(SearchQuery<TDocument> query)
