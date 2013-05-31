@@ -84,7 +84,7 @@ Search for movies only from 2000 to 2004 in category Sci-Fi
 	var found = cloudSearch.Search(searchQuery);
 	
 	
-Search for movies + number of result per category (faceted search)
+Search for movies + number of result per categories (faceted search)
 ------
 	var genreFacet = new Facet { Name = "genre" };
 	var liFacet = new List<Facet> { genreFacet };
