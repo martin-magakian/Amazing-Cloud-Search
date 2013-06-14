@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
 using AmazingCloudSearch.Builder;
 using AmazingCloudSearch.Contract;
 using AmazingCloudSearch.Contract.Result;
@@ -51,7 +55,8 @@ namespace AmazingCloudSearch
     {
         private readonly IMultiTenantCloudSearchSettings _multiTenantCloudSearchSettings;
 
-        public MultiTenantCloudSearch(IMultiTenantCloudSearchSettings multiTenantCloudSearchSettings, IQueryBuilder<TDocument> queryBuilder) : base(multiTenantCloudSearchSettings, queryBuilder)
+        public MultiTenantCloudSearch(IMultiTenantCloudSearchSettings multiTenantCloudSearchSettings, IQueryBuilder<TDocument> queryBuilder)
+            : base(multiTenantCloudSearchSettings, queryBuilder)
         {
             _multiTenantCloudSearchSettings = multiTenantCloudSearchSettings;
         }
@@ -62,16 +67,17 @@ namespace AmazingCloudSearch
             _multiTenantCloudSearchSettings = multiTenantCloudSearchSettings;
         }
 
-        public MultiTenantCloudSearch(string awsCloudSearchId, string apiVersion) : base(awsCloudSearchId, apiVersion)
+        public MultiTenantCloudSearch(string awsCloudSearchId, string apiVersion)
+            : base(awsCloudSearchId, apiVersion)
         {
         }
 
         public override SearchResult<TDocument> Search(SearchQuery<TDocument> query)
         {
             try
-            {                
+            {
                 var tenantCondition = CreateTenantBooleanCondition();
-                AddTenantBooleanConditionToQuery(tenantCondition, query);                
+                AddTenantBooleanConditionToQuery(tenantCondition, query);
                 return SearchWithException(query);
             }
             catch (Exception ex)
@@ -109,41 +115,87 @@ namespace AmazingCloudSearch
         {
             _multiTenantCloudSearchSettings = multiTenantCloudSearchSettings;
             _queryBuilder = queryBuilder;
-            
+
             _searchUri = string.Format("http://search-{0}/{1}/search", _multiTenantCloudSearchSettings.CloudSearchId, _multiTenantCloudSearchSettings.ApiVersion);
             _documentUri = string.Format("http://doc-{0}/{1}/documents/batch", _multiTenantCloudSearchSettings.CloudSearchId, _multiTenantCloudSearchSettings.ApiVersion);
-            _actionBuilder = new ActionBuilder<TDocument>();            
+            _actionBuilder = new ActionBuilder<TDocument>();
             _webHelper = new WebHelper();
             _hitFeeder = new HitFeeder<TDocument>();
             _facetBuilder = new FacetBuilder();
         }
 
-        public CloudSearch(ICloudSearchSettings multiTenantCloudSearchSettings) : this (multiTenantCloudSearchSettings, new QueryBuilder<TDocument>(multiTenantCloudSearchSettings))
+        public CloudSearch(ICloudSearchSettings multiTenantCloudSearchSettings)
+            : this(multiTenantCloudSearchSettings, new QueryBuilder<TDocument>(multiTenantCloudSearchSettings))
         {
         }
 
-        public CloudSearch(string awsCloudSearchId, string apiVersion) : this (new CloudSearchSettings(){ApiVersion = apiVersion, CloudSearchId = awsCloudSearchId})
-        {                                    
+        public CloudSearch(string awsCloudSearchId, string apiVersion)
+            : this(new CloudSearchSettings() { ApiVersion = apiVersion, CloudSearchId = awsCloudSearchId })
+        {
         }
 
         TResult Add<TResult>(IEnumerable<TDocument> liToAdd) where TResult : BasicResult, new()
         {
             var liAction = new List<BasicDocumentAction>();
+            const int maxBatchSize = 5242880; // 5 MB in bytes
+            var currentBatchSize = 0;
+
+            var results = new List<TResult>();
 
             foreach (var toAdd in liToAdd)
             {
                 var action = _actionBuilder.BuildAction(toAdd, ActionType.ADD);
                 liAction.Add(action);
+
+                currentBatchSize += liAction.GetSize();
+                if (currentBatchSize > maxBatchSize)
+                {
+                    liAction.Remove(action);
+
+                    // Push this batch which has reached the 5 MB max on AWS and start
+                    // a new batch.
+                    results.Add(PerformDocumentAction<TResult>(liAction));
+
+                    // Reset, start of new batch
+                    liAction.Clear();
+                    liAction.Add(action);
+                    currentBatchSize = liAction.GetSize();
+                }
             }
 
-            return PerformDocumentAction<TResult>(liAction);
+
+            if (liAction.Any())
+                results.Add(PerformDocumentAction<TResult>(liAction));
+
+            var result = combineResults(liAction, results);
+
+            return result;
         }
+
+        
+
+        TResult combineResults<TResult>(List<BasicDocumentAction> liAction, List<TResult> results) where TResult : BasicResult, new()
+        {
+            var result = Activator.CreateInstance<TResult>();
+            foreach (var res in results)
+            {
+                if (res.errors != null && res.errors.Any())
+                {
+                    result.errors.AddRange(res.errors);
+                }
+                result.adds += res.adds;
+                result.deletes += res.deletes;
+
+            }
+            result.status = string.Join(", ", results.Select(x => x.status).Distinct());
+            return result;
+        }
+
+
 
         TResult Add<TResult>(TDocument toAdd) where TResult : BasicResult, new()
         {
-            var action = _actionBuilder.BuildAction(toAdd, ActionType.ADD);
-
-            return PerformDocumentAction<TResult>(action);
+            return Add<TResult>(new List<TDocument>() { toAdd });
         }
 
         public AddResult Add(List<TDocument> toAdd)
@@ -164,7 +216,7 @@ namespace AmazingCloudSearch
 
         public DeleteResult Delete(ICloudSearchDocument toDelete)
         {
-            var action = _actionBuilder.BuildDeleteAction(new CloudSearchDocument {id = toDelete.id}, ActionType.DELETE);
+            var action = _actionBuilder.BuildDeleteAction(new CloudSearchDocument { id = toDelete.id }, ActionType.DELETE);
 
             return PerformDocumentAction<DeleteResult>(action);
         }
@@ -184,7 +236,7 @@ namespace AmazingCloudSearch
             }
             catch (Exception ex)
             {
-                return new SearchResult<TDocument> {error = "An error occured " + ex.Message, IsError = true};
+                return new SearchResult<TDocument> { error = "An error occured " + ex.Message, IsError = true };
             }
         }
 
@@ -196,7 +248,7 @@ namespace AmazingCloudSearch
 
             if (jsonResult.IsError)
             {
-                return new SearchResult<TDocument> {error = jsonResult.exeption, IsError = true};
+                return new SearchResult<TDocument> { error = jsonResult.exeption, IsError = true };
             }
 
             var jsonDynamic = JsonConvert.DeserializeObject<dynamic>(jsonResult.json);
@@ -240,7 +292,7 @@ namespace AmazingCloudSearch
 
             if (jsonResult.IsError)
             {
-                return new TResult {IsError = true, status = "error", errors = new List<Error> {new Error {message = jsonResult.exeption}}};
+                return new TResult { IsError = true, status = "error", errors = new List<Error> { new Error { message = jsonResult.exeption } } };
             }
 
             var result = JsonConvert.DeserializeObject<TResult>(jsonResult.json);
@@ -255,7 +307,7 @@ namespace AmazingCloudSearch
 
         TResult PerformDocumentAction<TResult>(BasicDocumentAction basicDocumentAction) where TResult : BasicResult, new()
         {
-            var listAction = new List<BasicDocumentAction> {basicDocumentAction};
+            var listAction = new List<BasicDocumentAction> { basicDocumentAction };
 
             return PerformDocumentAction<TResult>(listAction);
         }
