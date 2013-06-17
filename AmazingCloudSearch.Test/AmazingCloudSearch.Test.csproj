@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Builder\QueryBuilderTester.cs" />
+    <Compile Include="DocumentSizeExtTester.cs" />
     <Compile Include="InteractionContext.cs" />
     <Compile Include="MultiTenantCloudSearchTester.cs" />
     <Compile Include="Query\StringBooleanConditionTester.cs" />
