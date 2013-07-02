@@ -189,7 +189,5 @@ License
 =========
 MIT License (MIT)
 
-[![githalytics.com alpha](https://cruel-carlota.gopagoda.com/cf04469d46e9c36bb429da1323bebabb "githalytics.com")](http://githalytics.com/martin-magakian/Amazing-Cloud-Search)
-
-
+![githalytics.com alpha](https://cruel-carlota.gopagoda.com/cf04469d46e9c36bb429da1323bebabb "githalytics.com")]
 
