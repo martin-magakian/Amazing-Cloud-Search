@@ -171,12 +171,14 @@ namespace AmazingCloudSearch
 
             return result;
         }
-
         
-
         TResult combineResults<TResult>(List<BasicDocumentAction> liAction, List<TResult> results) where TResult : BasicResult, new()
         {
-            var result = Activator.CreateInstance<TResult>();
+            var result = Activator.CreateInstance<TResult>();            
+            if (result.errors == null)
+            {
+                result.errors = new List<Error>();
+            }
             foreach (var res in results)
             {
                 if (res.errors != null && res.errors.Any())
