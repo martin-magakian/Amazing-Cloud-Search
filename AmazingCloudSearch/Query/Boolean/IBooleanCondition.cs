@@ -2,8 +2,8 @@ namespace AmazingCloudSearch.Query.Boolean
 {
     public interface IBooleanCondition
     {
-		string GetCondictionParam();
-		bool IsOrCondition();
-		bool IsList();
+        string GetConditionParam();
+        bool IsOrCondition();
+        bool IsList();
     }
 }

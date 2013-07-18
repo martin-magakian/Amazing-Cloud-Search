@@ -1,8 +1,4 @@
 namespace AmazingCloudSearch.Contract.Result
 {
-    public class AddResult : BasicResult
-    {
-    }
-
-
+    public class AddResult : BasicResult {}
 }

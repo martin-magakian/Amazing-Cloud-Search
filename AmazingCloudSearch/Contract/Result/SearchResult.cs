@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
 using AmazingCloudSearch.Contract.Facet;
+using Newtonsoft.Json;
 
 namespace AmazingCloudSearch.Contract.Result
 {
-    public class SearchResult<T> where T : SearchDocument, new()
+    public class SearchResult<T> where T : ICloudSearchDocument, new()
     {
-
         public bool IsError { get; set; }
 
         public string rank { get; set; }
@@ -52,23 +51,23 @@ namespace AmazingCloudSearch.Contract.Result
             public int cpuTimeMs { get; set; }
         }
 
-		public List<Constraint> GetFacetResults(string name)
-		{
-			List<Constraint> contraints = null;
+        public List<Constraint> GetFacetResults(string name)
+        {
+            List<Constraint> contraints = null;
 
-			if (facetsResults != null && facetsResults.Count > 0)
-			{
-				foreach (FacetResult facetResult in facetsResults)
-				{
-					if (facetResult.Name == name)
-					{
-						contraints = facetResult.Contraint;
-						break;
-					}
-				}
-			}
+            if (facetsResults != null && facetsResults.Count > 0)
+            {
+                foreach (FacetResult facetResult in facetsResults)
+                {
+                    if (facetResult.Name == name)
+                    {
+                        contraints = facetResult.Contraint;
+                        break;
+                    }
+                }
+            }
 
-			return contraints;
-		}
+            return contraints;
+        }
     }
 }

@@ -5,7 +5,6 @@ namespace AmazingCloudSearch.Helper
 {
     public class ConvertArray
     {
-
         public List<int> StringToInt(List<string> newValues)
         {
             var r = new List<int>();
@@ -14,7 +13,9 @@ namespace AmazingCloudSearch.Helper
             {
                 int value;
                 if (int.TryParse(entry, out value))
+                {
                     r.Add(value);
+                }
             }
 
             return r;
@@ -28,9 +29,13 @@ namespace AmazingCloudSearch.Helper
             {
                 int value;
                 if (int.TryParse(entry, out value))
+                {
                     r.Add(value);
+                }
                 else
+                {
                     r.Add(null);
+                }
             }
 
             return r;
@@ -41,7 +46,9 @@ namespace AmazingCloudSearch.Helper
             var r = new List<DateTime>();
 
             foreach (var entry in newValues)
+            {
                 r.Add(Convert.ToDateTime(entry));
+            }
 
             return r;
         }
@@ -52,7 +59,9 @@ namespace AmazingCloudSearch.Helper
             var r = new List<string>();
 
             foreach (var entry in contraints)
+            {
                 r.Add(entry.ToString());
+            }
 
             return r;
         }

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Web.Script.Serialization;
 using AmazingCloudSearch.Contract.Facet;
 using AmazingCloudSearch.Contract.Result;
@@ -9,9 +7,9 @@ using Newtonsoft.Json;
 
 namespace AmazingCloudSearch.Serialization
 {
-    class FacetBuilder
+    internal class FacetBuilder
     {
-        private JavaScriptSerializer _serializer;
+        readonly JavaScriptSerializer _serializer;
 
         public FacetBuilder()
         {
@@ -20,19 +18,23 @@ namespace AmazingCloudSearch.Serialization
 
         public List<FacetResult> BuildFacet(dynamic jsonDynamic)
         {
-            try{
+            try
+            {
                 return BuildFacetWithException(jsonDynamic);
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 return new List<FacetResult>();
             }
         }
 
-        private List<FacetResult> BuildFacetWithException(dynamic jsonDynamic)
+        List<FacetResult> BuildFacetWithException(dynamic jsonDynamic)
         {
             dynamic facets = jsonDynamic.facets;
             if (facets == null)
+            {
                 return null;
+            }
 
             string jsonFacet = facets.ToString();
 
@@ -43,13 +45,13 @@ namespace AmazingCloudSearch.Serialization
             foreach (KeyValuePair<string, object> pair in facetDictionary)
             {
                 var contraints = CreateContraint(pair);
-                liFacet.Add(new FacetResult { Name = pair.Key, Contraint = contraints.constraints });
+                liFacet.Add(new FacetResult {Name = pair.Key, Contraint = contraints.constraints});
             }
 
             return liFacet;
         }
 
-        private Constraints CreateContraint(KeyValuePair<string, object> pair)
+        Constraints CreateContraint(KeyValuePair<string, object> pair)
         {
             try
             {
@@ -63,15 +65,15 @@ namespace AmazingCloudSearch.Serialization
             }
         }
 
-        private Constraint BuildContraint(string key, object value)
+        Constraint BuildContraint(string key, object value)
         {
-            var valueDic = (Dictionary<string, object>)value;
+            var valueDic = (Dictionary<string, object>) value;
 
             List<object> first = null;
 
             foreach (var pair in valueDic)
             {
-                first = (List<object>)pair.Value;
+                first = (List<object>) pair.Value;
                 Console.Write("");
             }
 
