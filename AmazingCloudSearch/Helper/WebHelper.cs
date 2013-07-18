@@ -61,9 +61,9 @@ namespace AmazingCloudSearch.Helper
             request.ProtocolVersion = HttpVersion.Version11;
             request.Method = "POST";
 
-            byte[] postBytes = Encoding.ASCII.GetBytes(json);
+            byte[] postBytes = Encoding.UTF8.GetBytes(json);
 
-            request.ContentType = "application/json";
+            request.ContentType = "application/json; charset=UTF-8";
             request.ContentLength = postBytes.Length;
 
             var requestStream = request.GetRequestStream();
