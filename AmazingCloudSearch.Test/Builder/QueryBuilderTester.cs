@@ -13,7 +13,7 @@ namespace AmazingCloudSearch.Test.Builder
 
         protected override void beforeEach()
         {
-            _queryBuilder = new QueryBuilder<Movie>();
+            _queryBuilder = new QueryBuilder<Movie>("");
         }
 
         [Test]
@@ -68,7 +68,7 @@ namespace AmazingCloudSearch.Test.Builder
         [SetUp]
         public void SetUp()
         {
-            _queryBuilder = new QueryBuilder<Movie>();
+            _queryBuilder = new QueryBuilder<Movie>("");
             _booleanQuery = new BooleanQuery();
             _listOrConditions = new List<string>();
             _andConditions = new StringBuilder();
@@ -132,7 +132,7 @@ namespace AmazingCloudSearch.Test.Builder
         [SetUp]
         public void SetUp()
         {
-            _queryBuilder = new QueryBuilder<Movie>();
+            _queryBuilder = new QueryBuilder<Movie>("");
             _booleanQuery = new BooleanQuery();
             _listOrConditions = new List<string>();
             _andConditions = new StringBuilder();

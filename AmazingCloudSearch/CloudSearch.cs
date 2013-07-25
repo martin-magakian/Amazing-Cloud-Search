@@ -23,22 +23,10 @@ namespace AmazingCloudSearch
         string ApiVersion { get; set; }
     }
 
-    public interface IMultiTenantCloudSearchSettings : ICloudSearchSettings
-    {
-        string TenantParameterName { get; set; }
-        string Tenant { get; set; }
-    }
-
     public class CloudSearchSettings : ICloudSearchSettings
     {
         public string CloudSearchId { get; set; }
         public string ApiVersion { get; set; }
-    }
-
-    public class MultiTenantCloudSearchSettings : CloudSearchSettings, IMultiTenantCloudSearchSettings
-    {
-        public string TenantParameterName { get; set; }
-        public string Tenant { get; set; }
     }
 
     public interface ICloudSearch<TDocument> where TDocument : ICloudSearchDocument, new()
@@ -51,82 +39,30 @@ namespace AmazingCloudSearch
         SearchResult<TDocument> Search(SearchQuery<TDocument> query);
     }
 
-    public class MultiTenantCloudSearch<TDocument> : CloudSearch<TDocument> where TDocument : ICloudSearchDocument, new()
-    {
-        private readonly IMultiTenantCloudSearchSettings _multiTenantCloudSearchSettings;
-
-        public MultiTenantCloudSearch(IMultiTenantCloudSearchSettings multiTenantCloudSearchSettings, IQueryBuilder<TDocument> queryBuilder)
-            : base(multiTenantCloudSearchSettings, queryBuilder)
-        {
-            _multiTenantCloudSearchSettings = multiTenantCloudSearchSettings;
-        }
-
-        public MultiTenantCloudSearch(IMultiTenantCloudSearchSettings multiTenantCloudSearchSettings)
-            : base(multiTenantCloudSearchSettings)
-        {
-            _multiTenantCloudSearchSettings = multiTenantCloudSearchSettings;
-        }
-
-        public MultiTenantCloudSearch(string awsCloudSearchId, string apiVersion)
-            : base(awsCloudSearchId, apiVersion)
-        {
-        }
-
-        public override SearchResult<TDocument> Search(SearchQuery<TDocument> query)
-        {
-            try
-            {
-                var tenantCondition = CreateTenantBooleanCondition();
-                AddTenantBooleanConditionToQuery(tenantCondition, query);
-                return SearchWithException(query);
-            }
-            catch (Exception ex)
-            {
-                return new SearchResult<TDocument> { error = "An error occured " + ex.Message, IsError = true };
-            }
-        }
-
-        public SearchQuery<TDocument> AddTenantBooleanConditionToQuery(StringBooleanCondition tenantCondition, SearchQuery<TDocument> query)
-        {
-            query.BooleanQuery.Conditions.Add(tenantCondition);
-            return query;
-        }
-
-        public StringBooleanCondition CreateTenantBooleanCondition()
-        {
-            var returnValue = new StringBooleanCondition(_multiTenantCloudSearchSettings.TenantParameterName,
-                                                         _multiTenantCloudSearchSettings.Tenant);
-            return returnValue;
-        }
-    }
-
     public class CloudSearch<TDocument> : ICloudSearch<TDocument> where TDocument : ICloudSearchDocument, new()
     {
         readonly string _documentUri;
         readonly string _searchUri;
         readonly ActionBuilder<TDocument> _actionBuilder;
         readonly WebHelper _webHelper;
-        readonly ICloudSearchSettings _multiTenantCloudSearchSettings;
+        readonly ICloudSearchSettings _cloudSearchSettings;
         readonly IQueryBuilder<TDocument> _queryBuilder;
         readonly HitFeeder<TDocument> _hitFeeder;
         readonly FacetBuilder _facetBuilder;
+        public List<IBooleanCondition> PersistanteCondition {get; set;}
 
-        public CloudSearch(ICloudSearchSettings multiTenantCloudSearchSettings, IQueryBuilder<TDocument> queryBuilder)
+        public CloudSearch(ICloudSearchSettings cloudSearchSettings)
         {
-            _multiTenantCloudSearchSettings = multiTenantCloudSearchSettings;
-            _queryBuilder = queryBuilder;
+            _cloudSearchSettings = cloudSearchSettings;
 
-            _searchUri = string.Format("http://search-{0}/{1}/search", _multiTenantCloudSearchSettings.CloudSearchId, _multiTenantCloudSearchSettings.ApiVersion);
-            _documentUri = string.Format("http://doc-{0}/{1}/documents/batch", _multiTenantCloudSearchSettings.CloudSearchId, _multiTenantCloudSearchSettings.ApiVersion);
+            _searchUri = string.Format("http://search-{0}/{1}/search", _cloudSearchSettings.CloudSearchId, _cloudSearchSettings.ApiVersion);
+            _documentUri = string.Format("http://doc-{0}/{1}/documents/batch", _cloudSearchSettings.CloudSearchId, _cloudSearchSettings.ApiVersion);
+            _queryBuilder = new QueryBuilder<TDocument>(_searchUri);
             _actionBuilder = new ActionBuilder<TDocument>();
             _webHelper = new WebHelper();
             _hitFeeder = new HitFeeder<TDocument>();
             _facetBuilder = new FacetBuilder();
-        }
-
-        public CloudSearch(ICloudSearchSettings multiTenantCloudSearchSettings)
-            : this(multiTenantCloudSearchSettings, new QueryBuilder<TDocument>(multiTenantCloudSearchSettings))
-        {
+            PersistanteCondition = new List<IBooleanCondition>();
         }
 
         public CloudSearch(string awsCloudSearchId, string apiVersion)
@@ -234,12 +170,27 @@ namespace AmazingCloudSearch
         {
             try
             {
+                query = AddPresistantConditionsToQuery(query);
                 return SearchWithException(query);
             }
             catch (Exception ex)
             {
                 return new SearchResult<TDocument> { error = "An error occured " + ex.Message, IsError = true };
             }
+        }
+
+        public void AddPresistantCondition(IBooleanCondition stringBooleanCondition)
+        {
+            PersistanteCondition.Add(stringBooleanCondition);
+        }
+
+        public SearchQuery<TDocument> AddPresistantConditionsToQuery(SearchQuery<TDocument> query)
+        {
+            foreach (IBooleanCondition condition in PersistanteCondition)
+            {
+                query.BooleanQuery.Conditions.Add(condition);
+            }
+            return query;
         }
 
         public virtual SearchResult<TDocument> SearchWithException(SearchQuery<TDocument> query)
@@ -313,5 +264,7 @@ namespace AmazingCloudSearch
 
             return PerformDocumentAction<TResult>(listAction);
         }
+
+
     }
 }

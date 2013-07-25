@@ -5,6 +5,7 @@ using AmazingCloudSearch.Query;
 using AmazingCloudSearch.Query.Boolean;
 using AmazingCloudSearch.Query.Facets;
 using NUnit.Framework;
+using AmazingCloudSearch.Contract;
 
 namespace AmazingCloudSearch.Test
 {

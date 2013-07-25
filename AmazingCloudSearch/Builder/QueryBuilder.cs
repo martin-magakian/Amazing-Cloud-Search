@@ -21,16 +21,7 @@ namespace AmazingCloudSearch.Builder
 
     public class QueryBuilder<T> : IQueryBuilder<T> where T : ICloudSearchDocument, new()
     {
-        readonly ICloudSearchSettings _cloudSearchSettings;
         readonly string _searchUri;
-
-        public QueryBuilder() {}
-
-        public QueryBuilder(ICloudSearchSettings cloudSearchSettings)                            
-        {
-            _cloudSearchSettings = cloudSearchSettings;
-            _searchUri = string.Format("http://search-{0}/{1}/search", _cloudSearchSettings.CloudSearchId, _cloudSearchSettings.ApiVersion);
-        } 
 
         public QueryBuilder(string searchUri)
         {

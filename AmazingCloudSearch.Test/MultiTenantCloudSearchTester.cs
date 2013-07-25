@@ -6,14 +6,14 @@ using Rhino.Mocks;
 namespace AmazingCloudSearch.Test
 {
     [TestFixture]
-    public class WhenSearching : InteractionContext<MultiTenantCloudSearch<Movie>>
+    public class WhenSearching : InteractionContext<CloudSearch<Movie>>
     {
-        private IMultiTenantCloudSearchSettings _multiTenantCloudSearchSettings;
+        private ICloudSearchSettings _cloudSearchSettings;
 
         protected override void beforeEach()
         {
-            _multiTenantCloudSearchSettings = new MultiTenantCloudSearchSettings() { Tenant = "fooTenant", TenantParameterName = "fooParameterName", ApiVersion = string.Empty, CloudSearchId = string.Empty };
-            Services.Inject(_multiTenantCloudSearchSettings);
+            _cloudSearchSettings = new CloudSearchSettings() { ApiVersion = string.Empty, CloudSearchId = string.Empty };
+            Services.Inject(_cloudSearchSettings);
             Services.PartialMockTheClassUnderTest();            
         }
 
@@ -21,50 +21,32 @@ namespace AmazingCloudSearch.Test
         public void ShouldCallSearchWithException()
         {
             ClassUnderTest.Search(new SearchQuery<Movie>());
-            ClassUnderTest.AssertWasCalled(x=> x.SearchWithException(null), x=> x.IgnoreArguments());
+            ClassUnderTest.AssertWasCalled(x => x.SearchWithException(null), x => x.IgnoreArguments());
         }
 
-        [Test]
-        public void ShouldAddATenantConstraintToTheQuery()
-        {
-            ClassUnderTest.Search(new SearchQuery<Movie>());
-            ClassUnderTest.AssertWasCalled(x => x.SearchWithException(Arg<SearchQuery<Movie>>.Matches(y=> ArgMatches(y))));
-        }
-
-        private bool ArgMatches(SearchQuery<Movie> searchQuery)
-        {
-            var hasACondition = searchQuery.BooleanQuery.Conditions.Count == 1;
-            var hasATenantCondition =
-                   searchQuery.BooleanQuery.Conditions[0].GetConditionParam()
-                                            .Contains(_multiTenantCloudSearchSettings.TenantParameterName);
-            var tenantConditionHasCorrectValue =
-                searchQuery.BooleanQuery.Conditions[0].GetConditionParam()
-                                            .Contains(_multiTenantCloudSearchSettings.Tenant);
-            return hasACondition && hasATenantCondition && tenantConditionHasCorrectValue;
-//            return hasACondition && hasATenantCondition;
-        }
     }
 
     [TestFixture]
     public class WhenAddingTenantBooleanConditionToQuery
     {
-        private MultiTenantCloudSearch<Movie> _multiTenantCloudSearch;
-        private IMultiTenantCloudSearchSettings _multiTenantCloudSearchSettings;
+        private CloudSearch<Movie> _cloudSearch;
+        private ICloudSearchSettings _cloudSearchSettings;
 
         [SetUp]
         public void SetUp()
         {
-            _multiTenantCloudSearchSettings = new MultiTenantCloudSearchSettings(){Tenant = "fooTenant", TenantParameterName = "fooParameterName", ApiVersion = string.Empty, CloudSearchId = string.Empty};
-            _multiTenantCloudSearch = new MultiTenantCloudSearch<Movie>(_multiTenantCloudSearchSettings);
+            _cloudSearchSettings = new CloudSearchSettings(){ApiVersion = string.Empty, CloudSearchId = string.Empty};
+            _cloudSearch = new CloudSearch<Movie>(_cloudSearchSettings);
+            
         }
 
         [Test]
         public void ShouldAddTheBooleanConditionToTheQuery()
         {
-            var stringBooleanCondition = new StringBooleanCondition(
-                _multiTenantCloudSearchSettings.TenantParameterName, _multiTenantCloudSearchSettings.Tenant);
             var searchQuery = new SearchQuery<Movie>();
-            var result = _multiTenantCloudSearch.AddTenantBooleanConditionToQuery(stringBooleanCondition, searchQuery);
+            var stringBooleanCondition = new StringBooleanCondition("fooTenant", "fooParameterName");
+            _cloudSearch.AddPresistantCondition(stringBooleanCondition);
+            var result = _cloudSearch.AddPresistantConditionsToQuery(searchQuery);
             var output = result.BooleanQuery.Conditions;
             output.Count.ShouldEqual(1);
             output[0].GetConditionParam().ShouldEqual(stringBooleanCondition.GetConditionParam());
@@ -74,35 +56,31 @@ namespace AmazingCloudSearch.Test
     [TestFixture]
     public class WhenCreatingATenantBooleanCondition
     {
-        private MultiTenantCloudSearch<Movie> _multiTenantCloudSearch;
-        private IMultiTenantCloudSearchSettings _multiTenantCloudSearchSettings;
+        private CloudSearch<Movie> _cloudSearch;
+        private ICloudSearchSettings _cloudSearchSettings;
 
         [SetUp]
         public void SetUp()
         {
-            _multiTenantCloudSearchSettings = new MultiTenantCloudSearchSettings() { Tenant = "fooTenant", TenantParameterName = "fooParameterName", ApiVersion = string.Empty, CloudSearchId = string.Empty };
-            _multiTenantCloudSearch = new MultiTenantCloudSearch<Movie>(_multiTenantCloudSearchSettings);
+            _cloudSearchSettings = new CloudSearchSettings() { ApiVersion = string.Empty, CloudSearchId = string.Empty };
+            _cloudSearch = new CloudSearch<Movie>(_cloudSearchSettings);
+            _cloudSearch.AddPresistantCondition(new StringBooleanCondition("fooTenant", "fooParameterName"));
         }
 
         [Test]
         public void ShouldCreateAStringBooleanCondition()
         {
-            var result = _multiTenantCloudSearch.CreateTenantBooleanCondition();
-            result.ShouldBeOfType<StringBooleanCondition>();
+            var result = _cloudSearch.PersistanteCondition;
+            result[0].ShouldBeOfType<StringBooleanCondition>();
         }
 
         [Test]
-        public void TheFieldValueShouldBeTheSettingsTenantParameterName()
+        public void TestConditionValue()
         {
-            var result = _multiTenantCloudSearch.CreateTenantBooleanCondition();
-            result.Field.ShouldEqual(_multiTenantCloudSearchSettings.TenantParameterName);
+            var result = _cloudSearch.PersistanteCondition;
+            var condition = ((StringBooleanCondition)result[0]);
+            condition.Field.ShouldEqual("fooTenant");
+            condition.Condition.ShouldEqual("fooParameterName");
         }
-
-        [Test]
-        public void TheConditionValueShouldBeTheSettingsTenantParam()
-        {
-            var result = _multiTenantCloudSearch.CreateTenantBooleanCondition();
-            result.Condition.ShouldEqual(_multiTenantCloudSearchSettings.Tenant);
-        }
-    }    
+    }
 }
