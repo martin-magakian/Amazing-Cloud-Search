@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.Script.Serialization;
-
-namespace AmazingCloudSearch.Contract
+﻿namespace AmazingCloudSearch.Contract
 {
-    public class SearchDocument
+    public class CloudSearchDocument : ICloudSearchDocument
     {
-        public SearchDocument() //constructor
-        {
-        }
-
-        [ScriptIgnoreAttribute]
         public string id { get; set; }
+        public string text_relevance { get; set; }
+        public string domain { get; set; }
+        public string tenant { get; set; }
+    }
+
+    public interface ICloudSearchDocument
+    {
+        string id { get; set; }
+        string text_relevance { get; set; }
+        string domain { get; set; }
+        string tenant { get; set; }
     }
 }

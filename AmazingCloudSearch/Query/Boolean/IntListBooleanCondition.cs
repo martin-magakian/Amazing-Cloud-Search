@@ -1,49 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
 
 namespace AmazingCloudSearch.Query.Boolean
 {
-	public class IntListBooleanCondition : IBooleanCondition
-	{
+    public class IntListBooleanCondition : IBooleanCondition
+    {
         public string Field { get; set; }
-		public List<int> Conditions { get; set; }
-		public bool IsOrConditionParam { get; set; }
+        public List<int> Conditions { get; set; }
+        public bool IsOrConditionParam { get; set; }
 
-		public IntListBooleanCondition(string field, List<int> conditions, bool isOrConditionParam = true)
-		{
-			Field = field;
-			Conditions = conditions;
-			IsOrConditionParam = isOrConditionParam;
-		}
-
-        public string GetCondictionParam()
+        public IntListBooleanCondition(string field, List<int> conditions, bool isOrConditionParam = true)
         {
-			StringBuilder condictionParam = new StringBuilder();
+            Field = field;
+            Conditions = conditions;
+            IsOrConditionParam = isOrConditionParam;
+        }
 
-			foreach (int condition in Conditions)
-			{
-				condictionParam.Append(Field + "%3A" + condition);
-				condictionParam.Append("+");
-			}
+        public string GetConditionParam()
+        {
+            StringBuilder condictionParam = new StringBuilder();
 
-			if (condictionParam.Length > 0)
-			{
-				condictionParam.Remove(condictionParam.Length - 1, 1);
-			}
+            foreach (int condition in Conditions)
+            {
+                condictionParam.Append(Field + "%3A" + condition);
+                condictionParam.Append("+");
+            }
+
+            if (condictionParam.Length > 0)
+            {
+                condictionParam.Remove(condictionParam.Length - 1, 1);
+            }
 
             return condictionParam.ToString();
         }
 
-		public bool IsOrCondition()
-		{
-			return IsOrConditionParam;
-		}
+        public bool IsOrCondition()
+        {
+            return IsOrConditionParam;
+        }
 
-		public bool IsList()
-		{
-			return true;
-		}
-	}
+        public bool IsList()
+        {
+            return true;
+        }
+    }
 }

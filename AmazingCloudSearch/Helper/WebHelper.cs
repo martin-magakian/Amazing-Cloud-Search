@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
 
 namespace AmazingCloudSearch.Helper
 {
-    class WebHelper
+    internal class WebHelper
     {
-
-        private static string JSON_ERROR = "error";
+        static string JSON_ERROR = "error";
 
         public class JsonResult
         {
@@ -26,13 +23,15 @@ namespace AmazingCloudSearch.Helper
                 string rawJsonResult = PostRequestWithException(url, json);
 
                 if (string.IsNullOrEmpty(rawJsonResult) || rawJsonResult.Equals(JSON_ERROR))
+                {
                     return new JsonResult {json = rawJsonResult, exeption = "unknow error", IsError = true};
+                }
 
-                return new JsonResult { json = rawJsonResult };
+                return new JsonResult {json = rawJsonResult};
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                return new JsonResult { exeption = ex.Message, IsError = true };
+                return new JsonResult {exeption = ex.Message, IsError = true};
             }
         }
 
@@ -43,26 +42,28 @@ namespace AmazingCloudSearch.Helper
                 string rawJsonResult = GetRequestWithException(url);
 
                 if (string.IsNullOrEmpty(rawJsonResult) || rawJsonResult.Equals(JSON_ERROR))
-                    return new JsonResult { json = rawJsonResult, exeption = "unknow error", IsError = true };
+                {
+                    return new JsonResult {json = rawJsonResult, exeption = "unknow error", IsError = true};
+                }
 
-                return new JsonResult { json = rawJsonResult };
+                return new JsonResult {json = rawJsonResult};
             }
             catch (Exception ex)
             {
-                return new JsonResult { exeption = ex.Message, IsError = true };
+                return new JsonResult {exeption = ex.Message, IsError = true};
             }
         }
 
-        private string PostRequestWithException(string url, string json)
+        string PostRequestWithException(string url, string json)
         {
-            var request = (HttpWebRequest)WebRequest.Create(url);
+            var request = (HttpWebRequest) WebRequest.Create(url);
 
             request.ProtocolVersion = HttpVersion.Version11;
             request.Method = "POST";
 
-            byte[] postBytes = Encoding.ASCII.GetBytes(json);
+            byte[] postBytes = Encoding.UTF8.GetBytes(json);
 
-            request.ContentType = "application/json";
+            request.ContentType = "application/json; charset=UTF-8";
             request.ContentLength = postBytes.Length;
 
             var requestStream = request.GetRequestStream();
@@ -74,8 +75,7 @@ namespace AmazingCloudSearch.Helper
         }
 
 
-
-        private string GetRequestWithException(string url)
+        string GetRequestWithException(string url)
         {
             var request = (HttpWebRequest) WebRequest.Create(url);
             request.ProtocolVersion = HttpVersion.Version11;
@@ -85,19 +85,21 @@ namespace AmazingCloudSearch.Helper
             return RunResponse(request);
         }
 
-        private string RunResponse(HttpWebRequest request)
+        string RunResponse(HttpWebRequest request)
         {
             HttpWebResponse response = null;
             try
             {
-                response = (HttpWebResponse)request.GetResponse();
+                response = (HttpWebResponse) request.GetResponse();
             }
             catch (WebException wex)
             {
                 if (wex.Response == null)
+                {
                     return JSON_ERROR;
+                }
 
-                using (var errorResponse = (HttpWebResponse)wex.Response)
+                using (var errorResponse = (HttpWebResponse) wex.Response)
                 {
                     using (var reader = new StreamReader(errorResponse.GetResponseStream()))
                     {

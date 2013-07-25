@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using AmazingCloudSearch.Query.Boolean;
-
-namespace AmazingCloudSearch.Query.Boolean
+﻿namespace AmazingCloudSearch.Query.Boolean
 {
     public class StringBooleanCondition : IBooleanCondition
     {
@@ -17,19 +11,19 @@ namespace AmazingCloudSearch.Query.Boolean
             Condition = condition;
         }
 
-        public string GetCondictionParam()
+        public string GetConditionParam()
         {
             return Field + "%3A" + "'" + Condition + "'";
         }
 
-		public bool IsOrCondition()
-		{
-			return false;
-		}
+        public bool IsOrCondition()
+        {
+            return false;
+        }
 
-		public bool IsList()
-		{
-			return false;
-		}
+        public bool IsList()
+        {
+            return false;
+        }
     }
 }

@@ -1,11 +1,11 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{50B1F3A3-89AA-4E74-BD88-65B3311C6E50}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "TestAPI\Test.csproj", "{B059E346-0F1A-4D5D-B9F7-2680E65CEA52}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmazingCloudSearch", "AmazingCloudSearch\AmazingCloudSearch.csproj", "{83228930-5000-4D7D-9C26-86DFEC265229}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmazingCloudSearch.Test", "AmazingCloudSearch.Test\AmazingCloudSearch.Test.csproj", "{B059E346-0F1A-4D5D-B9F7-2680E65CEA52}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
@@ -20,16 +20,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B059E346-0F1A-4D5D-B9F7-2680E65CEA52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B059E346-0F1A-4D5D-B9F7-2680E65CEA52}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B059E346-0F1A-4D5D-B9F7-2680E65CEA52}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{B059E346-0F1A-4D5D-B9F7-2680E65CEA52}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{B059E346-0F1A-4D5D-B9F7-2680E65CEA52}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{B059E346-0F1A-4D5D-B9F7-2680E65CEA52}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B059E346-0F1A-4D5D-B9F7-2680E65CEA52}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B059E346-0F1A-4D5D-B9F7-2680E65CEA52}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{B059E346-0F1A-4D5D-B9F7-2680E65CEA52}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{B059E346-0F1A-4D5D-B9F7-2680E65CEA52}.Release|x86.ActiveCfg = Release|Any CPU
 		{83228930-5000-4D7D-9C26-86DFEC265229}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{83228930-5000-4D7D-9C26-86DFEC265229}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83228930-5000-4D7D-9C26-86DFEC265229}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -40,6 +30,16 @@ Global
 		{83228930-5000-4D7D-9C26-86DFEC265229}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{83228930-5000-4D7D-9C26-86DFEC265229}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{83228930-5000-4D7D-9C26-86DFEC265229}.Release|x86.ActiveCfg = Release|Any CPU
+		{B059E346-0F1A-4D5D-B9F7-2680E65CEA52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B059E346-0F1A-4D5D-B9F7-2680E65CEA52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B059E346-0F1A-4D5D-B9F7-2680E65CEA52}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B059E346-0F1A-4D5D-B9F7-2680E65CEA52}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B059E346-0F1A-4D5D-B9F7-2680E65CEA52}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B059E346-0F1A-4D5D-B9F7-2680E65CEA52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B059E346-0F1A-4D5D-B9F7-2680E65CEA52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B059E346-0F1A-4D5D-B9F7-2680E65CEA52}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B059E346-0F1A-4D5D-B9F7-2680E65CEA52}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{B059E346-0F1A-4D5D-B9F7-2680E65CEA52}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
