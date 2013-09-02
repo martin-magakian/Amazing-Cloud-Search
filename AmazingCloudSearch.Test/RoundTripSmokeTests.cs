@@ -20,8 +20,7 @@ namespace AmazingCloudSearch.Test
             //build facet
             var genreFacetContraint = new StringFacetConstraints();
             genreFacetContraint.AddContraint("Sci-Fi");
-            genreFacetContraint.AddContraint("Fantasy");
-            genreFacetContraint.AddContraint("Action");
+            genreFacetContraint.AddContraint("Adventure");
             var genreFacet = new Facet { Name = "genre", TopResult = 2};
 
             var yearFacetContraint = new IntFacetContraints();
@@ -36,12 +35,12 @@ namespace AmazingCloudSearch.Test
             var bQuery = new BooleanQuery();
             var gCondition = new StringBooleanCondition("genre", "Sci-Fi");
             var yCondition = new IntBooleanCondition("year");
-            yCondition.SetInterval(2000,2004);
+            yCondition.SetInterval(1970,2013);
             bQuery.Conditions.Add(gCondition);
             bQuery.Conditions.Add(yCondition);
 
             //build search
-            var searchQuery = new SearchQuery<Movie> {Keyword = "star wars", Facets = liFacet, Size = 20, Start = 40, BooleanQuery = bQuery};
+            var searchQuery = new SearchQuery<Movie> {Keyword = "star wars", Facets = liFacet, Size = 20, Start = 0, BooleanQuery = bQuery};
 
             //search
             var found = cloudSearch.Search(searchQuery);
