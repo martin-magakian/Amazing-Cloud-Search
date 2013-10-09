@@ -166,6 +166,14 @@ But also accepts a parameter Start which can by used for paginating the results.
 The total number of results is also displayed in the search results:
 found.hits.found 
 
+Order By / Sorting Results
+------
+Similarly to pagination and other search related properties SearchQuery also accepts parameters for ordering the results.
+By making the OrderByField property one of your field names the results will be sorted by this field.
+To change the sort order (ASC/DESC) use the OrderByAsc bool, setting true for ascending and false for descending.
+Leaving the OrderByField null or empty will result in the cloud search default "text_relevance" being used for ranking results.
+
+
 Limit top facet result
 ------
 You can also request the top facet as part of the results.
