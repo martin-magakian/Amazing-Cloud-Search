@@ -152,6 +152,11 @@ namespace AmazingCloudSearch
             return Add<UpdateResult>(toUpdate);
         }
 
+		public UpdateResult Update(List<TDocument> toUpdate)
+		{
+			return Add<UpdateResult>(toUpdate);
+		}
+
         public DeleteResult Delete(ICloudSearchDocument toDelete)
         {
             var action = _actionBuilder.BuildDeleteAction(new CloudSearchDocument { id = toDelete.id }, ActionType.DELETE);
