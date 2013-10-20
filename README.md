@@ -43,7 +43,9 @@ Update a movie
 	movie.title = "In the skin of Amazon cloud search";
 	cloudSearch.Update(movie);
 	
-	
+
+Search
+======
 Search for movies
 ------
 	var searchQuery = new SearchQuery<Movie> {Keyword = "star wars"};
@@ -144,6 +146,59 @@ All together now: Facet for Sci-Fi,Fantasy, in 1950, between 1980 to 2012 + sear
 	//search
 	var found = cloudSearch.Search(searchQuery);
 	
+	
+Grouped Condition 
+========
+More complex search can be done using Grouped Condition.
+It's possible to search for "ConditionA" **and / or** "ConditionB".
+
+**and**:
+The query will return all the movies who match "ConditionA" **and** "ConditionB"
+
+**or**:
+The query will return all the movies who match "ConditionA" **or** "ConditionB"
+
+
+
+ConditionA:
+
+	//Movies from 2000 to 2004 in category Sci-Fi
+	var conditionA = new BooleanQuery();
+	var gConditionA = new StringBooleanCondition("genre", "Sci-Fi");
+	var yConditionA = new IntBooleanCondition("year");
+	yConditionA.SetInterval(2000, 2004);
+	conditionA.Conditions.Add(gConditionA);
+	conditionA.Conditions.Add(yConditionA);
+	
+ConditionB:
+
+	//Movies from 2000 to 2004 in category Fantasy
+	var conditionB = new BooleanQuery();
+	var gConditionB = new StringBooleanCondition("genre", "Fantasy");
+	var yConditionB = new IntBooleanCondition("year");
+	yConditionB.SetInterval(2000, 2004);
+	conditionB.Conditions.Add(gConditionB);
+	conditionB.Conditions.Add(yConditionB);
+	
+"and" exemple:
+-----
+Only the movies made from 2000 to 2004 in both **(and)** categories "Fantasy" and "Sci-Fi" will be return.
+ConditionA **and** ConditionB need to be true.
+
+	var groupCondition = GroupedCondition(conditionA, Condition.AND, conditionB);
+	var searchQuery = new SearchQuery<Movie> {BooleanQuery = groupCondition};
+	var found = cloudSearch.Search(searchQuery);
+	
+	
+"or" exemple:
+-----
+Only the movies made from 2000 to 2004 in at least one **(or)** of the categories "Fantasy","Sci-Fi" will be return.
+ConditionA **or** ConditionB need to be true.
+
+	var groupCondition = GroupedCondition(conditionA, Condition.OR, conditionB);
+	var searchQuery = new SearchQuery<Movie> {BooleanQuery = groupCondition};
+	var found = cloudSearch.Search(searchQuery);
+
 	
 More option
 =========

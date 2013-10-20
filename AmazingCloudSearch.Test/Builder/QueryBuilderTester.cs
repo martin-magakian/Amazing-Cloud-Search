@@ -202,18 +202,55 @@ namespace AmazingCloudSearch.Test.Builder
     }
 
 
-    //[TestFixture]
-    //public class WhenAddingOrderByCallTests : InteractionContext<QueryBuilder<Movie>>
-    //{
-    //    [Test]
-    //    public void ShouldCallOrderByIfOrderByNotNullOrEmpty()
-    //    {
-    //        string orderByField = "year";
-    //        SearchQuery<Movie> _searchQuery = new SearchQuery<Movie> {OrderByField = orderByField, OrderByAsc = true};
 
-    //        ClassUnderTest.BuildSearchQuery(_searchQuery);
-    //        ClassUnderTest.AssertWasCalled(x => x.OrderBy(null, true, null), x => x.IgnoreArguments());
-    //    }
-    //}
+
+
+
+
+    [TestFixture]
+    public class WhenGrouping
+    {
+        SearchQuery<Movie> _searchQuery;
+        QueryBuilder<Movie> _queryBuilder;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _queryBuilder = new QueryBuilder<Movie>("");
+        }
+
+        [Test]
+        public void AndCondition()
+        {
+            var conditionA = new StringBooleanCondition("genre", "Sci-Fi");
+            var conditionB = new IntBooleanCondition("year");
+            conditionB.SetFrom(2013);
+
+            var groupCondition = new GroupedCondition(conditionA, ConditionType.AND, conditionB);
+            var bQuery = new BooleanQuery();
+            bQuery.Conditions.Add(groupCondition);
+
+            _searchQuery = new SearchQuery<Movie> {BooleanQuery = bQuery };
+            string query = _queryBuilder.BuildSearchQuery(_searchQuery);
+            query.ShouldContain("(and+(and+genre%3A'Sci-Fi'+year%3A2013..))");
+        }
+
+        [Test]
+        public void OrCondition()
+        {
+            var conditionA = new StringBooleanCondition("genre", "Sci-Fi");
+            var conditionB = new IntBooleanCondition("year");
+            conditionB.SetFrom(2013);
+
+            var groupCondition = new GroupedCondition(conditionA, ConditionType.OR, conditionB);
+            var bQuery = new BooleanQuery();
+            bQuery.Conditions.Add(groupCondition);
+
+            _searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
+            string query = _queryBuilder.BuildSearchQuery(_searchQuery);
+            query.ShouldContain("(and+(or+genre%3A'Sci-Fi'+year%3A2013..))");
+        }
+
+    }
 
 }

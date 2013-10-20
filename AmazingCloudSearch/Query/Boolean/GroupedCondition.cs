@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AmazingCloudSearch.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,20 +13,14 @@ namespace AmazingCloudSearch.Query.Boolean
         private IBooleanCondition conditionB;
         private string boolOperator;
 
-        public enum BoolOperator
+        public GroupedCondition(IBooleanCondition conditionA, ConditionType conditionType, IBooleanCondition conditionB)
         {
-            _and,
-            _or
-        }
-
-        public GroupedCondition(BoolOperator theBoolOperator, IBooleanCondition conditionA, IBooleanCondition conditionB)
-        {
-            switch (theBoolOperator)
+            switch (conditionType)
             {
-                case BoolOperator._and:
+                case ConditionType.AND:
                     this.boolOperator = "and+";
                     break;
-                case BoolOperator._or:
+                case ConditionType.OR:
                     this.boolOperator = "or+";
                     break;
                 default:
