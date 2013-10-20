@@ -6,6 +6,7 @@ using AmazingCloudSearch.Contract;
 using AmazingCloudSearch.Query;
 using AmazingCloudSearch.Query.Boolean;
 using AmazingCloudSearch.Query.Facets;
+using AmazingCloudSearch.Enum;
 
 namespace AmazingCloudSearch.Builder
 {
@@ -70,7 +71,7 @@ namespace AmazingCloudSearch.Builder
 
             if (!String.IsNullOrEmpty(query.OrderByField))
             {
-                OrderBy(query.OrderByField, query.OrderByAsc, url);
+                OrderBy(query.OrderByField, query.Order, url);
             }
 
             return url.ToString();
@@ -231,18 +232,18 @@ namespace AmazingCloudSearch.Builder
             }
         }
 
-        public void OrderBy(string orderByField, bool orderByAsc, StringBuilder url)
+        public void OrderBy(string field, Order order, StringBuilder url)
         {
-            if (!String.IsNullOrEmpty(orderByField))
+            if (!String.IsNullOrEmpty(field))
             {
-                if (!orderByAsc)
+                if(order == Order.DESCENDING)
                 {
-                    orderByField = "-" + orderByField;
+                    field = "-" + field;
                 }
 
                 url.Append("&");
                 url.Append("rank=");
-                url.Append(orderByField);
+                url.Append(field);
             }
         }
 

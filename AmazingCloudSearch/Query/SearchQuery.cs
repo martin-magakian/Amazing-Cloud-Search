@@ -4,6 +4,7 @@ using AmazingCloudSearch.Contract;
 using AmazingCloudSearch.Helper;
 using AmazingCloudSearch.Query.Boolean;
 using AmazingCloudSearch.Query.Facets;
+using AmazingCloudSearch.Enum;
 
 namespace AmazingCloudSearch.Query
 {
@@ -25,7 +26,7 @@ namespace AmazingCloudSearch.Query
 
         public string OrderByField { get; set; }
 
-        public bool OrderByAsc { get; set; }
+        public Order Order { get; set; }
 
         public SearchQuery(bool buildFieldsFromType = true)
         {

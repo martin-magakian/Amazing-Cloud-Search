@@ -5,6 +5,7 @@ using AmazingCloudSearch.Query;
 using AmazingCloudSearch.Query.Boolean;
 using NUnit.Framework;
 using Rhino.Mocks;
+using AmazingCloudSearch.Enum;
 
 namespace AmazingCloudSearch.Test.Builder
 {
@@ -157,7 +158,7 @@ namespace AmazingCloudSearch.Test.Builder
         public void ShouldAddRankIfOrderByNotNullOrEmpty()
         {
             string orderByField = "year";
-            _searchQuery = new SearchQuery<Movie> { OrderByField = orderByField, OrderByAsc = true };
+            _searchQuery = new SearchQuery<Movie> { OrderByField = orderByField, Order = Order.ASCENDING };
 
             _queryBuilder.BuildSearchQuery(_searchQuery).ShouldContain("rank=" + orderByField);
         }
@@ -175,7 +176,7 @@ namespace AmazingCloudSearch.Test.Builder
         public void ShouldOrderByAscIfOrderByAscTrue()
         {
             string orderByField = "year";
-            _searchQuery = new SearchQuery<Movie> { OrderByField = orderByField, OrderByAsc = true };
+            _searchQuery = new SearchQuery<Movie> { OrderByField = orderByField, Order = Order.ASCENDING };
 
             _queryBuilder.BuildSearchQuery(_searchQuery).ShouldNotContain("rank=-" + orderByField);
             _queryBuilder.BuildSearchQuery(_searchQuery).ShouldContain("rank=" + orderByField);
@@ -185,12 +186,19 @@ namespace AmazingCloudSearch.Test.Builder
         public void ShouldOrderByDescIfOrderByAscFalse()
         {
             string orderByField = "year";
-            _searchQuery = new SearchQuery<Movie> { OrderByField = orderByField, OrderByAsc = false };
+            _searchQuery = new SearchQuery<Movie> { OrderByField = orderByField, Order = Order.DESCENDING };
 
             _queryBuilder.BuildSearchQuery(_searchQuery).ShouldContain("rank=-" + orderByField);
             _queryBuilder.BuildSearchQuery(_searchQuery).ShouldNotContain("rank=" + orderByField);
         }
 
+        [Test]
+        public void ShouldntAddRanking()
+        {
+            _searchQuery = new SearchQuery<Movie> {  };
+
+            _queryBuilder.BuildSearchQuery(_searchQuery).ShouldNotContain("rank=");
+        }
     }
 
 
