@@ -171,6 +171,8 @@ Search for movies where genre categories is in: "Sci-Fi" **and** "Fantasy" **and
 
 	_searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
 
+Note: <br />
+IntListBooleanCondition achieve the same as StringListBooleanCondition with Integer.
 	
 Grouped Condition 
 ========
