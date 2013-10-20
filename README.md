@@ -152,13 +152,16 @@ Grouped Condition
 More complex search can be done using Grouped Condition.
 It's possible to search for "ConditionA" **and / or** "ConditionB".
 
-Note:<br />
+Note:
+
 maybe "StringListBooleanCondition" and "IntListBooleanCondition" are more suitable depending on the case.
 
-**and**:<br />
+**and**:
+
 The query will return all the movies who match "ConditionA" **and** "ConditionB"
 
-**or**:<br />
+**or**:
+
 The query will return all the movies who match "ConditionA" **or** "ConditionB"
 
 	
