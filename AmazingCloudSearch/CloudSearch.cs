@@ -34,8 +34,8 @@ namespace AmazingCloudSearch
         AddResult Add(List<TDocument> toAdd);
         AddResult Add(TDocument toAdd);
         UpdateResult Update(TDocument toUpdate);
-        DeleteResult Delete(ICloudSearchDocument toDelete);
-        DeleteResult Delete(List<ICloudSearchDocument> toDelete);
+        DeleteResult Delete(TDocument toDelete);
+        DeleteResult Delete(List<TDocument> toDelete);
         SearchResult<TDocument> Search(SearchQuery<TDocument> query);
     }
 
@@ -152,14 +152,19 @@ namespace AmazingCloudSearch
             return Add<UpdateResult>(toUpdate);
         }
 
-        public DeleteResult Delete(ICloudSearchDocument toDelete)
+	public UpdateResult Update(List<TDocument> toUpdate)
+	{
+		return Add<UpdateResult>(toUpdate);
+	}
+
+        public DeleteResult Delete(TDocument toDelete)
         {
             var action = _actionBuilder.BuildDeleteAction(new CloudSearchDocument { id = toDelete.id }, ActionType.DELETE);
 
             return PerformDocumentAction<DeleteResult>(action);
         }
 
-        public DeleteResult Delete(List<ICloudSearchDocument> toDelete)
+        public DeleteResult Delete(List<TDocument> toDelete)
         {
             var action = toDelete.Select(x => _actionBuilder.BuildDeleteAction(new CloudSearchDocument { id = x.id }, ActionType.DELETE));
 
