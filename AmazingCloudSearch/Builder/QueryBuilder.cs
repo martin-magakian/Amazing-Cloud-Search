@@ -68,6 +68,11 @@ namespace AmazingCloudSearch.Builder
                 FeedStartResultFrom(query.Start, url);
             }
 
+            if (!String.IsNullOrEmpty(query.OrderByField))
+            {
+                OrderBy(query.OrderByField, query.OrderByAsc, url);
+            }
+
             return url.ToString();
         }
 
@@ -223,6 +228,21 @@ namespace AmazingCloudSearch.Builder
                 url.Append("&");
                 url.Append("size=");
                 url.Append(size);
+            }
+        }
+
+        public void OrderBy(string orderByField, bool orderByAsc, StringBuilder url)
+        {
+            if (!String.IsNullOrEmpty(orderByField))
+            {
+                if (!orderByAsc)
+                {
+                    orderByField = "-" + orderByField;
+                }
+
+                url.Append("&");
+                url.Append("rank=");
+                url.Append(orderByField);
             }
         }
 

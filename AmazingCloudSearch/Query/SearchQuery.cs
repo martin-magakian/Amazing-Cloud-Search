@@ -23,6 +23,10 @@ namespace AmazingCloudSearch.Query
 
         public string PublicSearchQueryString { get; set; }
 
+        public string OrderByField { get; set; }
+
+        public bool OrderByAsc { get; set; }
+
         public SearchQuery(bool buildFieldsFromType = true)
         {
             BooleanQuery = new BooleanQuery();
