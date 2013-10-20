@@ -1,9 +1,10 @@
+using AmazingCloudSearch.Enum;
 namespace AmazingCloudSearch.Query.Boolean
 {
     public interface IBooleanCondition
     {
         string GetConditionParam();
-        bool IsOrCondition();
+        ConditionType GetConditionType();
         bool IsList();
     }
 }

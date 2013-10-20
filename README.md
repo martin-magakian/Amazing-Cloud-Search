@@ -146,6 +146,31 @@ All together now: Facet for Sci-Fi,Fantasy, in 1950, between 1980 to 2012 + sear
 	//search
 	var found = cloudSearch.Search(searchQuery);
 	
+
+List Condition
+========
+OR condition
+---
+Search for movies where genre **at least in one** of those categorie: "Sci-Fi", "Fantasy", "other" 
+
+	var list = new List<string> { "Sci-Fi", "Fantasy", "other" };
+	var stringList = new StringListBooleanCondition("genre", list, ConditionType.OR);
+	var bQuery = new BooleanQuery();
+	bQuery.Conditions.Add(stringList);
+
+	_searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
+	
+AND condition
+---
+Search for movies where genre **in all** those categories: "Sci-Fi", "Fantasy", "other" 
+
+	var list = new List<string> { "Sci-Fi", "Fantasy", "other" };
+	var stringList = new StringListBooleanCondition("genre", list, ConditionType.OR);
+	var bQuery = new BooleanQuery();
+	bQuery.Conditions.Add(stringList);
+
+	_searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
+
 	
 Grouped Condition 
 ========

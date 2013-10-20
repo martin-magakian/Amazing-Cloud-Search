@@ -1,4 +1,5 @@
-﻿namespace AmazingCloudSearch.Query.Boolean
+﻿using AmazingCloudSearch.Enum;
+namespace AmazingCloudSearch.Query.Boolean
 {
     public class StringBooleanCondition : IBooleanCondition
     {
@@ -21,9 +22,9 @@
                 return Field + "%3A" + "'" + Condition + "'";
         }
 
-        public bool IsOrCondition()
+        public ConditionType GetConditionType()
         {
-            return false;
+            return ConditionType.AND;
         }
 
         public bool IsList()

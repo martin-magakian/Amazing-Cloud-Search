@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using AmazingCloudSearch.Enum;
+using System.Collections.Generic;
 using System.Text;
 
 namespace AmazingCloudSearch.Query.Boolean
@@ -7,13 +8,13 @@ namespace AmazingCloudSearch.Query.Boolean
     {
         public string Field { get; set; }
         public List<int> Conditions { get; set; }
-        public bool IsOrConditionParam { get; set; }
+        public ConditionType ConditionType { get; set; }
 
-        public IntListBooleanCondition(string field, List<int> conditions, bool isOrConditionParam = true)
+        public IntListBooleanCondition(string field, List<int> conditions, ConditionType conditionType = ConditionType.OR)
         {
             Field = field;
             Conditions = conditions;
-            IsOrConditionParam = isOrConditionParam;
+            ConditionType = conditionType;
         }
 
         public string GetConditionParam()
@@ -34,9 +35,9 @@ namespace AmazingCloudSearch.Query.Boolean
             return condictionParam.ToString();
         }
 
-        public bool IsOrCondition()
+        public ConditionType GetConditionType()
         {
-            return IsOrConditionParam;
+            return ConditionType;
         }
 
         public bool IsList()

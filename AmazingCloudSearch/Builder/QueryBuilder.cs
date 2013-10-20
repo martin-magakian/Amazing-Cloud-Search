@@ -200,7 +200,7 @@ namespace AmazingCloudSearch.Builder
         {
             foreach (var condition in booleanQuery.Conditions)
             {
-                if (condition.IsOrCondition())
+                if (condition.GetConditionType() == ConditionType.OR)
                 {
                     listOrConditions.Add(condition.GetConditionParam());
                 }

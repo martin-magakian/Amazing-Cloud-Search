@@ -1,21 +1,22 @@
-﻿namespace AmazingCloudSearch.Query.Boolean
+﻿using AmazingCloudSearch.Enum;
+namespace AmazingCloudSearch.Query.Boolean
 {
     public class IntBooleanCondition : IntegerRange, IBooleanCondition
     {
         public string Field { get; set; }
         public string Condition { get; set; }
-        public bool IsOrConditionParam { get; set; }
+        public ConditionType ConditionType { get; set; }
 
         public IntBooleanCondition(string field)
         {
             Field = field;
         }
 
-        public IntBooleanCondition(string field, int condition, bool isOrConditionParam = true)
+        public IntBooleanCondition(string field, int condition, ConditionType conditionType = ConditionType.OR)
         {
             Field = field;
             Condition = condition.ToString();
-            IsOrConditionParam = isOrConditionParam;
+            ConditionType = conditionType;
         }
 
         public void SetInterval(int from, int to)
@@ -38,9 +39,9 @@
             return Field + "%3A" + Condition;
         }
 
-        public bool IsOrCondition()
+        public ConditionType GetConditionType()
         {
-            return IsOrConditionParam;
+            return ConditionType;
         }
 
         public bool IsList()

@@ -1,6 +1,7 @@
 ﻿using System;
 using AmazingCloudSearch.Query.Boolean;
 using NUnit.Framework;
+using AmazingCloudSearch.Enum;
 
 namespace AmazingCloudSearch.Test.Query
 {
@@ -45,7 +46,7 @@ namespace AmazingCloudSearch.Test.Query
         [Test]
         public void IsOrConditionShouldBeFalse()
         {
-            new StringBooleanCondition(_field, _condition).IsOrCondition().ShouldBeFalse();
+            new StringBooleanCondition(_field, _condition).GetConditionType().ShouldEqual(ConditionType.AND);
         }
 
         [Test]

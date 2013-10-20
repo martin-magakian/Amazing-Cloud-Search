@@ -253,4 +253,71 @@ namespace AmazingCloudSearch.Test.Builder
 
     }
 
+
+    [TestFixture]
+    public class ListBooleanCondition
+    {
+        SearchQuery<Movie> _searchQuery;
+        QueryBuilder<Movie> _queryBuilder;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _queryBuilder = new QueryBuilder<Movie>("");
+        }
+
+        [Test]
+        public void StringListOr()
+        {
+            var list = new List<string> { "aValue1", "aValue2", "aValue3" };
+            var stringList = new StringListBooleanCondition("myField", list, ConditionType.OR);
+            var bQuery = new BooleanQuery();
+            bQuery.Conditions.Add(stringList);
+
+            _searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
+            string query = _queryBuilder.BuildSearchQuery(_searchQuery);
+            query.ShouldContain("(or+myField%3A'aValue1'+myField%3A'aValue2'+myField%3A'aValue3')");
+        }
+
+        [Test]
+        public void StringListAnd()
+        {
+            var list = new List<string> { "aValue1", "aValue2", "aValue3" };
+            var stringList = new StringListBooleanCondition("myField", list, ConditionType.AND);
+            var bQuery = new BooleanQuery();
+            bQuery.Conditions.Add(stringList);
+
+            _searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
+            string query = _queryBuilder.BuildSearchQuery(_searchQuery);
+            query.ShouldContain("(and+myField%3A'aValue1'+myField%3A'aValue2'+myField%3A'aValue3')");
+        }
+
+
+        [Test]
+        public void intListOr()
+        {
+            var list = new List<int> { 1, 2, 3 };
+            var stringList = new IntListBooleanCondition("myField", list, ConditionType.OR);
+            var bQuery = new BooleanQuery();
+            bQuery.Conditions.Add(stringList);
+
+            _searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
+            string query = _queryBuilder.BuildSearchQuery(_searchQuery);
+            query.ShouldContain("(or+myField%3A1+myField%3A2+myField%3A3)");
+        }
+
+        [Test]
+        public void IntListAnd()
+        {
+            var list = new List<int> { 1, 2, 3 };
+            var stringList = new IntListBooleanCondition("myField", list, ConditionType.AND);
+            var bQuery = new BooleanQuery();
+            bQuery.Conditions.Add(stringList);
+
+            _searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
+            string query = _queryBuilder.BuildSearchQuery(_searchQuery);
+            query.ShouldContain("(and+myField%3A1+myField%3A2+myField%3A3)");
+        }
+    }
+
 }

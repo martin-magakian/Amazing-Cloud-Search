@@ -42,9 +42,9 @@ namespace AmazingCloudSearch.Query.Boolean
             return conds.ToString();
         }
 
-        public bool IsOrCondition()
+        public ConditionType GetConditionType()
         {
-            return false;
+            return ConditionType.AND;
         }
 
         public bool IsList()
