@@ -152,52 +152,44 @@ Grouped Condition
 More complex search can be done using Grouped Condition.
 It's possible to search for "ConditionA" **and / or** "ConditionB".
 
+Note:
+maybe "StringListBooleanCondition" and "IntListBooleanCondition" are more suitable depending on the case.
+
 **and**:
 The query will return all the movies who match "ConditionA" **and** "ConditionB"
 
 **or**:
 The query will return all the movies who match "ConditionA" **or** "ConditionB"
 
-
-
-ConditionA:
-
-	//Movies from 2000 to 2004 in category Sci-Fi
-	var conditionA = new BooleanQuery();
-	var gConditionA = new StringBooleanCondition("genre", "Sci-Fi");
-	var yConditionA = new IntBooleanCondition("year");
-	yConditionA.SetInterval(2000, 2004);
-	conditionA.Conditions.Add(gConditionA);
-	conditionA.Conditions.Add(yConditionA);
 	
-ConditionB:
-
-	//Movies from 2000 to 2004 in category Fantasy
-	var conditionB = new BooleanQuery();
-	var gConditionB = new StringBooleanCondition("genre", "Fantasy");
-	var yConditionB = new IntBooleanCondition("year");
-	yConditionB.SetInterval(2000, 2004);
-	conditionB.Conditions.Add(gConditionB);
-	conditionB.Conditions.Add(yConditionB);
-	
-"and" exemple:
+"OR" exemple:
 -----
-Only the movies made from 2000 to 2004 in both **(and)** categories "Fantasy" and "Sci-Fi" will be return.
-ConditionA **and** ConditionB need to be true.
+Return the movies who are in Sci-Fi **or** made from 2013
 
-	var groupCondition = GroupedCondition(conditionA, Condition.AND, conditionB);
-	var searchQuery = new SearchQuery<Movie> {BooleanQuery = groupCondition};
-	var found = cloudSearch.Search(searchQuery);
+            var conditionA = new StringBooleanCondition("genre", "Sci-Fi");
+            var conditionB = new IntBooleanCondition("year");
+            conditionB.SetFrom(2013);
+            var groupCondition = new GroupedCondition(conditionA, ConditionType.AND, conditionB);
+			
+            var bQuery = new BooleanQuery();
+            bQuery.Conditions.Add(groupCondition);
+            _searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
 	
 	
-"or" exemple:
+"AND" exemple:
 -----
-Only the movies made from 2000 to 2004 in at least one **(or)** of the categories "Fantasy","Sci-Fi" will be return.
-ConditionA **or** ConditionB need to be true.
+Return the movies who are in Sci-Fi **and** made from 2013
 
-	var groupCondition = GroupedCondition(conditionA, Condition.OR, conditionB);
-	var searchQuery = new SearchQuery<Movie> {BooleanQuery = groupCondition};
-	var found = cloudSearch.Search(searchQuery);
+            var conditionA = new StringBooleanCondition("genre", "Sci-Fi");
+            var conditionB = new IntBooleanCondition("year");
+            conditionB.SetFrom(2013);
+            var groupCondition = new GroupedCondition(conditionA, ConditionType.OR, conditionB);
+			
+            var bQuery = new BooleanQuery();
+            bQuery.Conditions.Add(groupCondition);
+            _searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
+			
+			
 
 	
 More option
