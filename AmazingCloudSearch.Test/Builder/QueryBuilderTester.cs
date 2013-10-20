@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using AmazingCloudSearch.Builder;
+using AmazingCloudSearch.Query;
 using AmazingCloudSearch.Query.Boolean;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace AmazingCloudSearch.Test.Builder
 {
@@ -138,4 +140,72 @@ namespace AmazingCloudSearch.Test.Builder
             _andConditions = new StringBuilder();
         }        
     }
+
+    [TestFixture]
+    public class WhenAddingOrderBy
+    { 
+        SearchQuery<Movie> _searchQuery;
+        QueryBuilder<Movie> _queryBuilder;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _queryBuilder = new QueryBuilder<Movie>("");
+        }
+
+        [Test]
+        public void ShouldAddRankIfOrderByNotNullOrEmpty()
+        {
+            string orderByField = "year";
+            _searchQuery = new SearchQuery<Movie> { OrderByField = orderByField, OrderByAsc = true };
+
+            _queryBuilder.BuildSearchQuery(_searchQuery).ShouldContain("rank=" + orderByField);
+        }
+
+        [Test]
+        public void ShouldNotAddRankIfOrderByNullOrEmpty()
+        {
+            string orderByField = "year";
+            _searchQuery = new SearchQuery<Movie> ();
+
+            _queryBuilder.BuildSearchQuery(_searchQuery).ShouldNotContain("rank=" + orderByField);
+        }
+
+        [Test]
+        public void ShouldOrderByAscIfOrderByAscTrue()
+        {
+            string orderByField = "year";
+            _searchQuery = new SearchQuery<Movie> { OrderByField = orderByField, OrderByAsc = true };
+
+            _queryBuilder.BuildSearchQuery(_searchQuery).ShouldNotContain("rank=-" + orderByField);
+            _queryBuilder.BuildSearchQuery(_searchQuery).ShouldContain("rank=" + orderByField);
+        }
+
+        [Test]
+        public void ShouldOrderByDescIfOrderByAscFalse()
+        {
+            string orderByField = "year";
+            _searchQuery = new SearchQuery<Movie> { OrderByField = orderByField, OrderByAsc = false };
+
+            _queryBuilder.BuildSearchQuery(_searchQuery).ShouldContain("rank=-" + orderByField);
+            _queryBuilder.BuildSearchQuery(_searchQuery).ShouldNotContain("rank=" + orderByField);
+        }
+
+    }
+
+
+    //[TestFixture]
+    //public class WhenAddingOrderByCallTests : InteractionContext<QueryBuilder<Movie>>
+    //{
+    //    [Test]
+    //    public void ShouldCallOrderByIfOrderByNotNullOrEmpty()
+    //    {
+    //        string orderByField = "year";
+    //        SearchQuery<Movie> _searchQuery = new SearchQuery<Movie> {OrderByField = orderByField, OrderByAsc = true};
+
+    //        ClassUnderTest.BuildSearchQuery(_searchQuery);
+    //        ClassUnderTest.AssertWasCalled(x => x.OrderBy(null, true, null), x => x.IgnoreArguments());
+    //    }
+    //}
+
 }
