@@ -61,6 +61,7 @@
     <Compile Include="Contract\Result\FacetResult.cs" />
     <Compile Include="DocumentSizeExtension.cs" />
     <Compile Include="Enum\Order.cs" />
+    <Compile Include="Query\Boolean\GroupedCondition.cs" />
     <Compile Include="Query\Boolean\StringListBooleanCondition.cs" />
     <Compile Include="Query\Boolean\IntListBooleanCondition.cs" />
     <Compile Include="Serialization\FacetBuilder.cs" />
