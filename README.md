@@ -151,7 +151,7 @@ List Condition
 ========
 OR condition
 ---
-Search for movies where genre **at least in one** of those categorie: "Sci-Fi", "Fantasy", "other" 
+Search for movies where genre is one of: "Sci-Fi" **or** "Fantasy" **or** "other" 
 
 	var list = new List<string> { "Sci-Fi", "Fantasy", "other" };
 	var stringList = new StringListBooleanCondition("genre", list, ConditionType.OR);
@@ -162,7 +162,7 @@ Search for movies where genre **at least in one** of those categorie: "Sci-Fi", 
 	
 AND condition
 ---
-Search for movies where genre **in all** those categories: "Sci-Fi", "Fantasy", "other" 
+Search for movies where genre categories is in: "Sci-Fi" **and** "Fantasy" **and** "other" in the same time.
 
 	var list = new List<string> { "Sci-Fi", "Fantasy", "other" };
 	var stringList = new StringListBooleanCondition("genre", list, ConditionType.OR);
