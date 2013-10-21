@@ -11,9 +11,9 @@ It should look like : yourDomainName-xxxxxxxxxxxxx.us-east-1.cloudsearch.amazona
 
 > This exemple can be used with the IMDB default index that you can select when creating your Cloud Search.
 
-It indexes movies which implement SearchDocument (just an ID):
+It indexes movies which implement CloudSearchDocument (just an ID):
 
-	public class Movie : SearchDocument
+	public class Movie : CloudSearchDocument
 	{
 		public List<string> actor { get; set; }
 		public string director { get; set; }
@@ -22,7 +22,7 @@ It indexes movies which implement SearchDocument (just an ID):
 		public int year { get; set; }
 	}
 
-> The reason why my object field starts in lowercase is because YOU NEED to match the field name in your index. 
+> Object field starts in lowercase because THEY NEED to match the field name in your index. 
 > This needs to be improved (feel free)
 
 Add a movie
@@ -71,16 +71,23 @@ Search for movies only from 2000 to 2004 in category Sci-Fi
 	bQuery.Conditions.Add(gCondition);
 	bQuery.Conditions.Add(yCondition);
 
-	var searchQuery = new SearchQuery<Movie> {Keyword = "star wars", Facets = liFacet, Size = 20, BooleanQuery = bQuery};
+	var searchQuery = new SearchQuery<Movie> {Keyword = "star wars", Size = 20, BooleanQuery = bQuery};
 	var found = cloudSearch.Search(searchQuery);
 	
 	
-Search for movies + number of result per categories (faceted search)
+faceted Search
+======
+
+Faceted search are used to display how many result can be find in each categorie. The user is usually able to drill-down each facet.
+![faceted search Amazon](https://raw.github.com/artin-magakian/Amazing-Cloud-Search/README_src/faceted-search-amazon.png)
+Amazon.com use facet when searching for a book. In the left panel the user can see all search result matching is search ordered by categorie "language".
+
+Search for star wars movies + number of result per categories (faceted search)
 ------
 	var genreFacet = new Facet { Name = "genre" };
 	var liFacet = new List<Facet> { genreFacet };
 	
-	var searchQuery = new SearchQuery<Movie> {Keyword = "star wars"};
+	var searchQuery = new SearchQuery<Movie> {Keyword = "star wars",  Facets = liFacet };
 	var found = cloudSearch.Search(searchQuery);
 	
 	
@@ -114,8 +121,10 @@ Search for movies + number of results in the 'Sci-Fi' and 'Fantasy' categories +
 	var found = cloudSearch.Search(searchQuery);
 	
 	
-All together now: Facet for Sci-Fi,Fantasy, in 1950, between 1980 to 2012 + search only for movies in Sci-Fi from 2000 to 2004
-------
+Complex example:
+=====
+Let put everything together now: Facet for Sci-Fi,Fantasy, in 1950, between 1980 to 2012 + search only for movies in Sci-Fi from 2000 to 2004
+
 	var cloudSearch = new CloudSearch<Movie>("YOUR_CLOUD_SEARCH_API", "2011-02-01");
 
 	//build facet
