@@ -186,7 +186,7 @@ It's possible to search for "ConditionA" **and / or** "ConditionB".
 maybe "StringListBooleanCondition" and "IntListBooleanCondition" are more suitable depending on the case.
 
 	
-### "OR" example: ###
+### OR grouping: ###
 The query will return all the movies who match "ConditionA" **or** "ConditionB"
 Return the movies who are in Sci-Fi **or** made from 2013
 
@@ -200,7 +200,7 @@ Return the movies who are in Sci-Fi **or** made from 2013
             _searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
 	
 	
-### "AND" example: ###
+### AND grouping: ###
 The query will return all the movies who match "ConditionA" **and** "ConditionB"
 Return the movies who are in Sci-Fi **and** made from 2013
 
@@ -213,7 +213,7 @@ Return the movies who are in Sci-Fi **and** made from 2013
 	bQuery.Conditions.Add(groupCondition);
 	_searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
 			
-### Mixing AND / OR ###
+### AND / OR grouping example: ###
 The query will return all movies who match "(movies in 1990 **AND** genre "Sci-Fi")" **OR** (movies in 2013 **AND** genre "Fantasy")
 
 	var condition1A = new StringBooleanCondition("genre", "Sci-Fi");
