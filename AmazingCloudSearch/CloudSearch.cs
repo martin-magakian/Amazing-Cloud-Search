@@ -34,6 +34,7 @@ namespace AmazingCloudSearch
         AddResult Add(List<TDocument> toAdd);
         AddResult Add(TDocument toAdd);
         UpdateResult Update(TDocument toUpdate);
+        UpdateResult Update(List<TDocument> toUpdate);
         DeleteResult Delete(TDocument toDelete);
         DeleteResult Delete(List<TDocument> toDelete);
         SearchResult<TDocument> Search(SearchQuery<TDocument> query);
@@ -152,10 +153,10 @@ namespace AmazingCloudSearch
             return Add<UpdateResult>(toUpdate);
         }
 
-	public UpdateResult Update(List<TDocument> toUpdate)
-	{
-		return Add<UpdateResult>(toUpdate);
-	}
+	    public UpdateResult Update(List<TDocument> toUpdate)
+	    {
+		    return Add<UpdateResult>(toUpdate);
+	    }
 
         public DeleteResult Delete(TDocument toDelete)
         {

@@ -29,18 +29,15 @@ It indexes movies which implement CloudSearchDocument (just an ID):
 	var cloudSearch = new CloudSearch<Movie>("YOU_AMAZON_CLOUD_SEARCH_KEY", "2011-02-01");
 	var movie = new Movie { id = "fjuhewdijsdjoi", title = "simple title", year = 2012, mydate = DateTime.Now, actor = new List<string> { "good actor1", "good actor2" }, director = "martin magakian" };
 	cloudSearch.Add(movie);
-
-
+	
 ### Remove a movie ###
 	var movie = new Movie { id = "fjuhewdijsdjoi" }
 	cloudSearch.Delete(movie);
-	
 	
 ### Update a movie ###
 	movie.title = "In the skin of Amazon cloud search";
 	cloudSearch.Update(movie);
 	
-
 Search
 ======
 ### Search for movies ###
@@ -209,7 +206,31 @@ Return the movies who are in Sci-Fi **and** made from 2013
             var bQuery = new BooleanQuery();
             bQuery.Conditions.Add(groupCondition);
             _searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
-			
+		
+Batch
+=========
+Documents can be Add, Update and Delete by "pack" using batch.
+It use only one HTTP request to add, remove, update multiple documents.
+
+Note:<br />
+Under the hood Amazing-Cloud-Search split the batch into 5 Mb maximum request in order to meet Amazon API requirement.
+A 12Mb bash request will send 3 HTTP requests. 5Mb + 5Mb + 2Mb = 12Mb
+
+### Adding multiple movies at once###
+	var movie1 = new Movie { id = "fjuhewdijsdjoi", title = "movie1"};
+	var movie2 = new Movie { id = "sdhuslzajshdus", title = "movie2"};
+	var movies = new List<Movie> { movie1, movie2 };
+	
+### Updating multiple movies at once###
+	movie1.Title = "movie1_bis";
+	movie2.Title = "movie2_bis";
+	var moviesBis = List<Movie>{ movie1, movie2 };
+	cloudSearch.Update(moviesBis);
+	
+### Deleting multiple movies at once###
+	var moviesToRemove = List<Movie>{ movie1, movie2 };
+	cloudSearch.Delete(moviesToRemove);
+		
 Pagination
 =========
 SearchQuery accepts parameter Size for the number of results.

@@ -313,5 +313,4 @@ namespace AmazingCloudSearch.Test.Builder
             query.ShouldContain("(and+myField%3A1+myField%3A2+myField%3A3)");
         }
     }
-
 }
