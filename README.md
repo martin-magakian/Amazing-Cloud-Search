@@ -204,14 +204,33 @@ Return the movies who are in Sci-Fi **or** made from 2013
 The query will return all the movies who match "ConditionA" **and** "ConditionB"
 Return the movies who are in Sci-Fi **and** made from 2013
 
-            var conditionA = new StringBooleanCondition("genre", "Sci-Fi");
-            var conditionB = new IntBooleanCondition("year");
-            conditionB.SetFrom(2013);
-            var groupCondition = new GroupedCondition(conditionA, ConditionType.OR, conditionB);
+	var conditionA = new StringBooleanCondition("genre", "Sci-Fi");
+	var conditionB = new IntBooleanCondition("year");
+	conditionB.SetFrom(2013);
+	var groupCondition = new GroupedCondition(conditionA, ConditionType.OR, conditionB);
+
+	var bQuery = new BooleanQuery();
+	bQuery.Conditions.Add(groupCondition);
+	_searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
 			
-            var bQuery = new BooleanQuery();
-            bQuery.Conditions.Add(groupCondition);
-            _searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
+### Mixing AND / OR ###
+The query will return all movies who match "(movies in 1990 **AND** genre "Sci-Fi")" **OR** (movies in 2013 **AND** genre "Fantasy")
+
+	var condition1A = new StringBooleanCondition("genre", "Sci-Fi");
+	var condition1B = new IntBooleanCondition("year");
+	condition1B.SetFrom(1990);
+	var groupCondition1 = new GroupedCondition(condition1A, ConditionType.AND, condition1B);
+
+	var condition2A = new StringBooleanCondition("genre", "Fantasy");
+	var condition2B = new IntBooleanCondition("year");
+	condition2B.SetFrom(2013);
+	var groupCondition2 = new GroupedCondition(condition2A, ConditionType.AND, condition2B);
+
+	var groupConditionAll = new GroupedCondition(groupCondition1, ConditionType.OR, groupCondition2);
+
+	var bQuery = new BooleanQuery();
+	bQuery.Conditions.Add(groupConditionAll);
+	_searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
 		
 Batch
 =========

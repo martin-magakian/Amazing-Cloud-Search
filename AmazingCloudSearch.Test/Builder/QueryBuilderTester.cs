@@ -245,6 +245,72 @@ namespace AmazingCloudSearch.Test.Builder
             query.ShouldContain("(and+(or+genre%3A'Sci-Fi'+year%3A2013..))");
         }
 
+        [Test]
+        public void ComplexAnd()
+        {
+            var condition1A = new StringBooleanCondition("genre", "Sci-Fi");
+            var condition1B = new IntBooleanCondition("year");
+            condition1B.SetFrom(1990);
+            var groupCondition1 = new GroupedCondition(condition1A, ConditionType.AND, condition1B);
+
+            var condition2A = new StringBooleanCondition("genre", "Fantasy");
+            var condition2B = new IntBooleanCondition("year");
+            condition2B.SetFrom(2013);
+            var groupCondition2 = new GroupedCondition(condition2A, ConditionType.AND, condition2B);
+
+            var groupConditionAll = new GroupedCondition(groupCondition1, ConditionType.AND, groupCondition2);
+
+            var bQuery = new BooleanQuery();
+            bQuery.Conditions.Add(groupConditionAll);
+
+            _searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
+            string query = _queryBuilder.BuildSearchQuery(_searchQuery);
+            query.ShouldContain("(and+(and+(and+genre%3A'Sci-Fi'+year%3A1990..)+(and+genre%3A'Fantasy'+year%3A2013..)))");
+        }
+
+        [Test]
+        public void ComplexOr()
+        {
+            var condition1A = new StringBooleanCondition("genre", "Sci-Fi");
+            var condition1B = new IntBooleanCondition("year");
+            condition1B.SetFrom(1990);
+            var groupCondition1 = new GroupedCondition(condition1A, ConditionType.AND, condition1B);
+
+            var condition2A = new StringBooleanCondition("genre", "Fantasy");
+            var condition2B = new IntBooleanCondition("year");
+            condition2B.SetFrom(2013);
+            var groupCondition2 = new GroupedCondition(condition2A, ConditionType.AND, condition2B);
+
+            var groupConditionAll = new GroupedCondition(groupCondition1, ConditionType.OR, groupCondition2);
+
+            var bQuery = new BooleanQuery();
+            bQuery.Conditions.Add(groupConditionAll);
+
+            _searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
+            string query = _queryBuilder.BuildSearchQuery(_searchQuery);
+            query.ShouldContain("(and+(or+(and+genre%3A'Sci-Fi'+year%3A1990..)+(and+genre%3A'Fantasy'+year%3A2013..)))");
+        }
+
+        [Test]
+        public void ComplexOrWithList()
+        {
+            var genres = new List<string> { "Sci-Fi", "Fantasy" };
+            var condition1A = new StringListBooleanCondition("genre", genres, ConditionType.OR);
+            var years = new List<int> { 1987, 1990, 2010 };
+            var condition1B = new IntListBooleanCondition("year", years, ConditionType.OR);
+            var groupCondition1 = new GroupedCondition(condition1A, ConditionType.AND, condition1B);
+
+            var condition2 = new StringBooleanCondition("director", "doduck");
+
+            var groupConditionAll = new GroupedCondition(groupCondition1, ConditionType.AND, condition2);
+
+            var bQuery = new BooleanQuery();
+            bQuery.Conditions.Add(groupConditionAll);
+
+            _searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
+            string query = _queryBuilder.BuildSearchQuery(_searchQuery);
+            query.ShouldNotContain("(and+(and+(and+genre%3A'Sci-Fi'+genre%3A'Fantasy'+year%3A1987+year%3A1990+year%3A2010)+director%3A'doduck'))");
+        }
     }
 
 
