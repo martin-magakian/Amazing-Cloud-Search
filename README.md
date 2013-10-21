@@ -279,8 +279,11 @@ Feel free to fork and improuve Amazing Cloud Search API.
 
 Contact
 =========
-Developed by Martin Magakian
-dev.martin.magakian@gmail.com
+Developed by Martin Magakian dev.martin.magakian@gmail.com<br />
+For [doduck prototype](http://doduck.com) (English)
+
+Pour [doduck prototype](http://doduck.fr) (Français)
+
 
 
 
