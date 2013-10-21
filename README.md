@@ -5,7 +5,7 @@ Allow you to search, faceted search, add, update, remove objects from your Amazo
 
 Contribute
 ---------
-Amazing-Cloud-Search was created and maintain by [doduck prototype](http://doduck.com)<br />
+Amazon CloudSearch AWS library created and maintain by [doduck prototype](http://doduck.com)<br />
 Feel free to contribute to the project using push request.
 
 Le site [doduck prototype](http://doduck.fr) est aussi disponible en Français.
