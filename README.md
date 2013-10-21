@@ -79,7 +79,7 @@ faceted Search
 ======
 
 Faceted search are used to display how many result can be find in each categorie. The user is usually able to drill-down each facet.
-![faceted search Amazon](https://raw.github.com/artin-magakian/Amazing-Cloud-Search/README_src/faceted-search-amazon.png)
+![faceted search Amazon](https://raw.github.com/martin-magakian/Amazing-Cloud-Search/master/README_src/faceted-search-amazon.png)
 Amazon.com use facet when searching for a book. In the left panel the user can see all search result matching is search ordered by categorie "language".
 
 Search for star wars movies + number of result per categories (faceted search)
