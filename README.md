@@ -9,7 +9,7 @@ How to use
 First you need a Amazon cloud search instance and it's URL (We will call it a key)
 It should look like : yourDomainName-xxxxxxxxxxxxx.us-east-1.cloudsearch.amazonaws.com
 
-> This exemple can be used with the IMDB default index that you can select when creating your Cloud Search.
+> This example can be used with the IMDB default index that you can select when creating your Cloud Search.
 
 It indexes movies which implement CloudSearchDocument (just an ID):
 
@@ -43,14 +43,12 @@ It indexes movies which implement CloudSearchDocument (just an ID):
 
 Search
 ======
-Search for movies
-------
+### Search for movies ###
 	var searchQuery = new SearchQuery<Movie> {Keyword = "star wars"};
 	var found = cloudSearch.Search(searchQuery);
 	
 	
-Search for a maximum of 25 movies only in the category from Sci-Fi
-------
+### maximum of 25 movies only in the category from Sci-Fi ### 
 	var bQuery = new BooleanQuery();
 	var gCondition = new StringBooleanCondition("genre", "Sci-Fi");
 	bQuery.Conditions.Add(gCondition);
@@ -59,8 +57,7 @@ Search for a maximum of 25 movies only in the category from Sci-Fi
 	var found = cloudSearch.Search(searchQuery);
 	
 	
-Search for movies only from 2000 to 2004 in category Sci-Fi
-------
+### from 2000 to 2004 in category Sci-Fi ### 
 	var bQuery = new BooleanQuery();
 	var gCondition = new StringBooleanCondition("genre", "Sci-Fi");
 	var yCondition = new IntBooleanCondition("year");
@@ -81,8 +78,7 @@ Faceted search are used to display how many result can be find in each categorie
 
 Amazon.com use facet when searching for a book. In the left panel the user can see all search result matching is search ordered by categorie "language".
 
-Search for star wars movies + number of result per categories (faceted search)
-------
+###  Search for star wars movies + number of result per categories (faceted search) ### 
 	var genreFacet = new Facet { Name = "genre" };
 	var liFacet = new List<Facet> { genreFacet };
 	
@@ -90,8 +86,7 @@ Search for star wars movies + number of result per categories (faceted search)
 	var found = cloudSearch.Search(searchQuery);
 	
 	
-Search for movies + number of result in 'Sci-Fi' and 'Fantasy' category (faceted search)
-------
+### Search for movies + number of result in 'Sci-Fi' and 'Fantasy' category (faceted search) ### 
 	var genreFacetContraint = new StringFacetConstraints();
 	genreFacetContraint.AddContraint("Sci-Fi");
 	genreFacetContraint.AddContraint("Fantasy");
@@ -102,8 +97,7 @@ Search for movies + number of result in 'Sci-Fi' and 'Fantasy' category (faceted
 	var found = cloudSearch.Search(searchQuery);
 	
 	
-Search for movies + number of results in the 'Sci-Fi' and 'Fantasy' categories + the number of result in the year 1950 and between 1980 and 2012 (faceted search)
-------
+### Search for movies + number of results in the 'Sci-Fi' and 'Fantasy' categories + the number of result in the year 1950 and between 1980 and 2012 (faceted search) ### 
 	var genreFacetContraint = new StringFacetConstraints();
 	genreFacetContraint.AddContraint("Sci-Fi");
 	genreFacetContraint.AddContraint("Fantasy");
@@ -157,8 +151,7 @@ Let put everything together now: Facet for Sci-Fi,Fantasy, in 1950, between 1980
 
 List Condition
 ========
-OR condition
----
+### OR condition ### 
 Search for movies where genre is one of: "Sci-Fi" **or** "Fantasy" **or** "other" 
 
 	var list = new List<string> { "Sci-Fi", "Fantasy", "other" };
@@ -168,8 +161,7 @@ Search for movies where genre is one of: "Sci-Fi" **or** "Fantasy" **or** "other
 
 	_searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
 	
-AND condition
----
+### AND condition ### 
 Search for movies where genre categories is in: "Sci-Fi" **and** "Fantasy" **and** "other" in the same time.
 
 	var list = new List<string> { "Sci-Fi", "Fantasy", "other" };
@@ -179,7 +171,7 @@ Search for movies where genre categories is in: "Sci-Fi" **and** "Fantasy" **and
 
 	_searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
 
-Note: <br />
+Note:<br />
 IntListBooleanCondition achieve the same as StringListBooleanCondition with Integer.
 	
 Grouped Condition 
@@ -187,18 +179,12 @@ Grouped Condition
 More complex search can be done using Grouped Condition.
 It's possible to search for "ConditionA" **and / or** "ConditionB".
 
-Note:
+**Note:**<br />
 maybe "StringListBooleanCondition" and "IntListBooleanCondition" are more suitable depending on the case.
 
-**and**:<br />
-The query will return all the movies who match "ConditionA" **and** "ConditionB"
-
-**or**:<br />
-The query will return all the movies who match "ConditionA" **or** "ConditionB"
-
 	
-"OR" exemple:
------
+### "OR" example: ###
+The query will return all the movies who match "ConditionA" **or** "ConditionB"
 Return the movies who are in Sci-Fi **or** made from 2013
 
             var conditionA = new StringBooleanCondition("genre", "Sci-Fi");
@@ -211,8 +197,8 @@ Return the movies who are in Sci-Fi **or** made from 2013
             _searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
 	
 	
-"AND" exemple:
------
+### "AND" example: ###
+The query will return all the movies who match "ConditionA" **and** "ConditionB"
 Return the movies who are in Sci-Fi **and** made from 2013
 
             var conditionA = new StringBooleanCondition("genre", "Sci-Fi");
@@ -255,7 +241,7 @@ Limit top facet result
 =========
 You can also request the top facet as part of the results.
 Facet object accepts a TopResult parameter.
-For exemple we want the top 3 movie genres of our search
+For example we want the top 3 movie genres of our search
 
 	var genreFacet = new Facet { Name = "genre", TopResult = 2};
 
