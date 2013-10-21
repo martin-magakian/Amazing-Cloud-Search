@@ -75,7 +75,7 @@ Search for movies only from 2000 to 2004 in category Sci-Fi
 	var found = cloudSearch.Search(searchQuery);
 	
 	
-faceted Search
+Faceted Search
 ======
 
 Faceted search are used to display how many result can be find in each categorie. The user is usually able to drill-down each facet.
@@ -230,30 +230,37 @@ Return the movies who are in Sci-Fi **and** made from 2013
 			
 
 	
-More option
-=========
+
 
 Pagination
-------
+=========
 SearchQuery accepts parameter Size for the number of results.
 But also accepts a parameter Start which can by used for paginating the results.
 The total number of results is also displayed in the search results:
 found.hits.found 
 
 Order By / Sorting Results
-------
-Similarly to pagination and other search related properties SearchQuery also accepts parameters for ordering the results.
-By making the OrderByField property one of your field names the results will be sorted by this field.
-To change the sort order (ASC/DESC) use the OrderByAsc bool, setting true for ascending and false for descending.
-Leaving the OrderByField null or empty will result in the cloud search default "text_relevance" being used for ranking results.
+=========
+SearchQuery also accepts parameters for ordering the results.
+
+All movies from the oldest to the youngest (descending):
+
+	var searchQuery = new SearchQuery<Movie> { OrderByField = "year", Order = Order.DESCENDING };
+
+All movies from the youngest to the oldest (ascending):
+
+	var searchQuery = new SearchQuery<Movie> { OrderByField = "year", Order = Order.ASCENDING };
+
+Without any OrderByField set, CloudSearch default ordering will be used. 
 
 
 Limit top facet result
-------
+=========
 You can also request the top facet as part of the results.
 Facet object accepts a TopResult parameter.
 For exemple we want the top 3 movie genres of our search
-var genreFacet = new Facet { Name = "genre", TopResult = 2};
+
+	var genreFacet = new Facet { Name = "genre", TopResult = 2};
 
 
 Dependency

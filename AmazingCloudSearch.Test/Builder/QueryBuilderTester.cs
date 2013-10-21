@@ -201,12 +201,6 @@ namespace AmazingCloudSearch.Test.Builder
         }
     }
 
-
-
-
-
-
-
     [TestFixture]
     public class WhenGrouping
     {
@@ -303,7 +297,7 @@ namespace AmazingCloudSearch.Test.Builder
 
             _searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
             string query = _queryBuilder.BuildSearchQuery(_searchQuery);
-            query.ShouldContain("(or+myField%3A1+myField%3A2+myField%3A3)");
+            query.ShouldContain("(or+myField%3A1+myField%3A2+myField%3A3)") ;
         }
 
         [Test]
