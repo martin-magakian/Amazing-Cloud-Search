@@ -48,7 +48,7 @@ Search
 	var found = cloudSearch.Search(searchQuery);
 	
 	
-### maximum of 25 movies only in the category from Sci-Fi ### 
+### maximum of 25 movies only in the category from Sci-Fi ###
 	var bQuery = new BooleanQuery();
 	var gCondition = new StringBooleanCondition("genre", "Sci-Fi");
 	bQuery.Conditions.Add(gCondition);
@@ -57,7 +57,7 @@ Search
 	var found = cloudSearch.Search(searchQuery);
 	
 	
-### from 2000 to 2004 in category Sci-Fi ### 
+### from 2000 to 2004 in category Sci-Fi ###
 	var bQuery = new BooleanQuery();
 	var gCondition = new StringBooleanCondition("genre", "Sci-Fi");
 	var yCondition = new IntBooleanCondition("year");
