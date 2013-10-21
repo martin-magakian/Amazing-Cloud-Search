@@ -25,18 +25,18 @@ It indexes movies which implement CloudSearchDocument (just an ID):
 > Object field starts in lowercase because THEY NEED to match the field name in your index. 
 > This needs to be improved (feel free)
 
-#### Add a movie ####
+### Add a movie ###
 	var cloudSearch = new CloudSearch<Movie>("YOU_AMAZON_CLOUD_SEARCH_KEY", "2011-02-01");
 	var movie = new Movie { id = "fjuhewdijsdjoi", title = "simple title", year = 2012, mydate = DateTime.Now, actor = new List<string> { "good actor1", "good actor2" }, director = "martin magakian" };
 	cloudSearch.Add(movie);
 
 
-#### Remove a movie ####
+### Remove a movie ###
 	var movie = new Movie { id = "fjuhewdijsdjoi" }
 	cloudSearch.Delete(movie);
 	
 	
-#### Update a movie ####
+### Update a movie ###
 	movie.title = "In the skin of Amazon cloud search";
 	cloudSearch.Update(movie);
 	
