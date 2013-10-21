@@ -78,7 +78,7 @@ Faceted search are used to display how many result can be find in each categorie
 
 Amazon.com use facet when searching for a book. In the left panel the user can see all search result matching is search ordered by categorie "language".
 
-###  Search for star wars movies + number of result per categories (faceted search) ### 
+###  Search for star wars movies + number of result per categories (faceted search) ###
 	var genreFacet = new Facet { Name = "genre" };
 	var liFacet = new List<Facet> { genreFacet };
 	
@@ -86,7 +86,7 @@ Amazon.com use facet when searching for a book. In the left panel the user can s
 	var found = cloudSearch.Search(searchQuery);
 	
 	
-### Search for movies + number of result in 'Sci-Fi' and 'Fantasy' category (faceted search) ### 
+### Search for movies + number of result in 'Sci-Fi' and 'Fantasy' category (faceted search) ###
 	var genreFacetContraint = new StringFacetConstraints();
 	genreFacetContraint.AddContraint("Sci-Fi");
 	genreFacetContraint.AddContraint("Fantasy");
@@ -97,7 +97,7 @@ Amazon.com use facet when searching for a book. In the left panel the user can s
 	var found = cloudSearch.Search(searchQuery);
 	
 	
-### Search for movies + number of results in the 'Sci-Fi' and 'Fantasy' categories + the number of result in the year 1950 and between 1980 and 2012 (faceted search) ### 
+### Search for movies + number of results in the 'Sci-Fi' and 'Fantasy' categories + the number of result in the year 1950 and between 1980 and 2012 (faceted search) ###
 	var genreFacetContraint = new StringFacetConstraints();
 	genreFacetContraint.AddContraint("Sci-Fi");
 	genreFacetContraint.AddContraint("Fantasy");
@@ -151,7 +151,7 @@ Let put everything together now: Facet for Sci-Fi,Fantasy, in 1950, between 1980
 
 List Condition
 ========
-### OR condition ### 
+### OR condition ###
 Search for movies where genre is one of: "Sci-Fi" **or** "Fantasy" **or** "other" 
 
 	var list = new List<string> { "Sci-Fi", "Fantasy", "other" };
@@ -161,7 +161,7 @@ Search for movies where genre is one of: "Sci-Fi" **or** "Fantasy" **or** "other
 
 	_searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
 	
-### AND condition ### 
+### AND condition ###
 Search for movies where genre categories is in: "Sci-Fi" **and** "Fantasy" **and** "other" in the same time.
 
 	var list = new List<string> { "Sci-Fi", "Fantasy", "other" };
@@ -210,11 +210,6 @@ Return the movies who are in Sci-Fi **and** made from 2013
             bQuery.Conditions.Add(groupCondition);
             _searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
 			
-			
-
-	
-
-
 Pagination
 =========
 SearchQuery accepts parameter Size for the number of results.
