@@ -242,7 +242,7 @@ namespace AmazingCloudSearch.Test.Builder
 
             _searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
             string query = _queryBuilder.BuildSearchQuery(_searchQuery);
-            query.ShouldContain("(and+(or+genre%3A'Sci-Fi'+year%3A2013..))");
+            query.ShouldContain("(or+(or+genre%3A'Sci-Fi'+year%3A2013..))");
         }
 
         [Test]
@@ -288,7 +288,7 @@ namespace AmazingCloudSearch.Test.Builder
 
             _searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
             string query = _queryBuilder.BuildSearchQuery(_searchQuery);
-            query.ShouldContain("(and+(or+(and+genre%3A'Sci-Fi'+year%3A1990..)+(and+genre%3A'Fantasy'+year%3A2013..)))");
+            query.ShouldContain("(or+(or+(and+genre%3A'Sci-Fi'+year%3A1990..)+(and+genre%3A'Fantasy'+year%3A2013..)))");
         }
 
         [Test]
@@ -309,7 +309,12 @@ namespace AmazingCloudSearch.Test.Builder
 
             _searchQuery = new SearchQuery<Movie> { BooleanQuery = bQuery };
             string query = _queryBuilder.BuildSearchQuery(_searchQuery);
-            query.ShouldNotContain("(and+(and+(and+genre%3A'Sci-Fi'+genre%3A'Fantasy'+year%3A1987+year%3A1990+year%3A2010)+director%3A'doduck'))");
+
+            //query.ShouldNotContain("(and+(and+(and+genre%3A'Sci-Fi'+genre%3A'Fantasy'+year%3A1987+year%3A1990+year%3A2010)+director%3A'doduck'))");
+
+            query.ShouldContain("(and+(and+(or+genre%3A'Sci-Fi'+genre%3A'Fantasy')+(or+year%3A1987+year%3A1990+year%3A2010)+director%3A'doduck'))");
+
+
         }
     }
 
