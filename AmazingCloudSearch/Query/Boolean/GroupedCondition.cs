@@ -11,21 +11,12 @@ namespace AmazingCloudSearch.Query.Boolean
 
         private IBooleanCondition conditionA;
         private IBooleanCondition conditionB;
-        private string boolOperator;
+        private ConditionType condition;
 
         public GroupedCondition(IBooleanCondition conditionA, ConditionType conditionType, IBooleanCondition conditionB)
         {
-            switch (conditionType)
-            {
-                case ConditionType.AND:
-                    this.boolOperator = "and+";
-                    break;
-                case ConditionType.OR:
-                    this.boolOperator = "or+";
-                    break;
-                default:
-                    break;
-            }
+            condition = conditionType;
+
             this.conditionA = conditionA;
             this.conditionB = conditionB;
         }
@@ -34,7 +25,7 @@ namespace AmazingCloudSearch.Query.Boolean
         {
             StringBuilder conds = new StringBuilder();
             conds.Append("(");
-            conds.Append(boolOperator);
+            conds.Append(GetConditionType() == ConditionType.AND ?  "and+" : "or+");
             conds.Append(conditionA.GetConditionParam());
             conds.Append("+");
             conds.Append(conditionB.GetConditionParam());
@@ -44,7 +35,7 @@ namespace AmazingCloudSearch.Query.Boolean
 
         public ConditionType GetConditionType()
         {
-            return ConditionType.AND;
+            return condition;
         }
 
         public bool IsList()
