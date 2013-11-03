@@ -160,14 +160,14 @@ namespace AmazingCloudSearch
 
         public DeleteResult Delete(TDocument toDelete)
         {
-            var action = _actionBuilder.BuildDeleteAction(new CloudSearchDocument { id = toDelete.id }, ActionType.DELETE);
+            var action = _actionBuilder.BuildDeleteAction(new CloudSearchDocument { Id = toDelete.Id }, ActionType.DELETE);
 
             return PerformDocumentAction<DeleteResult>(action);
         }
 
         public DeleteResult Delete(List<TDocument> toDelete)
         {
-            var action = toDelete.Select(x => _actionBuilder.BuildDeleteAction(new CloudSearchDocument { id = x.id }, ActionType.DELETE));
+            var action = toDelete.Select(x => _actionBuilder.BuildDeleteAction(new CloudSearchDocument { Id = x.Id }, ActionType.DELETE));
 
             return PerformDocumentAction<DeleteResult>(action.ToList());
         }

@@ -12,7 +12,7 @@ namespace AmazingCloudSearch.Builder
         {
             string type = ActionTypeFunction.ActionTypeToString(actionType);
 
-            return new AddUpdateBasicDocumentAction<T> {type = type, id = document.id, lang = "en", fields = document, version = version};
+            return new AddUpdateBasicDocumentAction<T> {type = type, id = document.Id, lang = "en", fields = document, version = version};
         }
 
         public AddUpdateBasicDocumentAction<T> BuildAction(T document, ActionType actionType)
@@ -26,7 +26,7 @@ namespace AmazingCloudSearch.Builder
         {
             string type = ActionTypeFunction.ActionTypeToString(actionType);
 
-            return new BasicDocumentAction {type = type, id = document.id, version = version};
+            return new BasicDocumentAction {type = type, id = document.Id, version = version};
         }
 
         public BasicDocumentAction BuildDeleteAction(ICloudSearchDocument document, ActionType actionType)
