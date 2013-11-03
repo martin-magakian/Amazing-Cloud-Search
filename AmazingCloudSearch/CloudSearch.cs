@@ -121,6 +121,7 @@ namespace AmazingCloudSearch
                 if (res.errors != null && res.errors.Any())
                 {
                     result.errors.AddRange(res.errors);
+	                result.IsError = true;
                 }
                 result.adds += res.adds;
                 result.deletes += res.deletes;
