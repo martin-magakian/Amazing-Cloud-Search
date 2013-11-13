@@ -6,17 +6,19 @@ namespace AmazingCloudSearch.Query.Boolean
         public string Field { get; set; }
         public string Condition { get; set; }
         public ConditionType ConditionType { get; set; }
+        public bool Negate { get; set; }
 
         public IntBooleanCondition(string field)
         {
             Field = field;
         }
 
-        public IntBooleanCondition(string field, int condition, ConditionType conditionType = ConditionType.OR)
+        public IntBooleanCondition(string field, int condition, ConditionType conditionType = ConditionType.OR, bool negate = false)
         {
             Field = field;
             Condition = condition.ToString();
             ConditionType = conditionType;
+            Negate = negate;
         }
 
         public void SetInterval(int from, int to)
@@ -36,7 +38,12 @@ namespace AmazingCloudSearch.Query.Boolean
 
         public string GetConditionParam()
         {
-            return Field + "%3A" + Condition;
+            if (Negate)
+            {
+                return "(not+" + Field + "%3A" + Condition + ")";
+            }
+
+            return this.Field + "%3A" + this.Condition;
         }
 
         public ConditionType GetConditionType()
