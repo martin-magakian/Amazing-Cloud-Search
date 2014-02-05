@@ -8,59 +8,67 @@ namespace AmazingCloudSearch.Test.Query
     [TestFixture]
     public class StringBooleanConditionTester
     {
-        string _field = "_field";
-        string _condition = "_condition";
+        const string Field = "_field";
+        const string Condition = "_condition";
 
         [Test]
         public void ShouldStartWithTheFieldName()
         {
-            var stringBooleanCondition = new StringBooleanCondition(_field, _condition);
+            var stringBooleanCondition = new StringBooleanCondition(Field, Condition);
             var output = stringBooleanCondition.GetConditionParam();
-            output.ShouldStartWith(_field);
+            output.ShouldStartWith(Field);
         }
 
         [Test]
         public void ShouldUrlEscapeAColonAfterTheField()
         {            
-            var stringBooleanCondition = new StringBooleanCondition(_field, _condition);
+            var stringBooleanCondition = new StringBooleanCondition(Field, Condition);
             var output = stringBooleanCondition.GetConditionParam();
-            output.ShouldStartWith(string.Format("{0}{1}", _field, Uri.EscapeDataString(":")));            
+            output.ShouldStartWith(string.Format("{0}{1}", Field, Uri.EscapeDataString(":")));            
         }
 
         [Test]
         public void ShouldEncloseTheConditionInQuotes()
         {            
-            var stringBooleanCondition = new StringBooleanCondition(_field, _condition);
+            var stringBooleanCondition = new StringBooleanCondition(Field, Condition);
             var output = stringBooleanCondition.GetConditionParam();
-            output.ShouldEndWith(string.Format("'{0}'", _condition));
+            output.ShouldEndWith(string.Format("'{0}'", Condition));
         }
 
         [Test]
         public void FormatShouldBeFieldColonQuoteConditionQuote()
-        {            
-            var stringBooleanCondition = new StringBooleanCondition(_field, _condition);
+        {
+            var stringBooleanCondition = new StringBooleanCondition(Field, Condition);
             var output = stringBooleanCondition.GetConditionParam();
-            output.ShouldEndWith(string.Format("{0}{1}'{2}'", _field, Uri.EscapeDataString(":"), _condition));            
+            output.ShouldEndWith(string.Format("{0}{1}'{2}'", Field, Uri.EscapeDataString(":"), Condition));            
+        }
+
+        [Test]
+        public void NegatedFormatShouldBeWrappedWithNot()
+        {
+            var stringBooleanCondition = new StringBooleanCondition(Field, Condition, true);
+            var output = stringBooleanCondition.GetConditionParam();
+            output.ShouldEndWith(string.Format("(not+{0}{1}'{2}')", Field, Uri.EscapeDataString(":"), Condition));
         }
 
         [Test]
         public void NullFieldShouldNotIncludeColon()
         {
-            var stringBooleanCondition = new StringBooleanCondition(null, _condition);
+            var stringBooleanCondition = new StringBooleanCondition(null, Condition);
             var output = stringBooleanCondition.GetConditionParam();
-            output.ShouldEqual(string.Format("'{0}'", _condition));
+            output.ShouldEqual(string.Format("'{0}'", Condition));
         }
 
         [Test]
         public void IsOrConditionShouldBeFalse()
         {
-            new StringBooleanCondition(_field, _condition).GetConditionType().ShouldEqual(ConditionType.AND);
+            new StringBooleanCondition(Field, Condition).GetConditionType().ShouldEqual(ConditionType.AND);
         }
 
         [Test]
         public void IsListShouldBeFalse()
         {
-            new StringBooleanCondition(_field, _condition).IsList().ShouldBeFalse();
+            new StringBooleanCondition(Field, Condition).IsList().ShouldBeFalse();
         }
     }
 }
