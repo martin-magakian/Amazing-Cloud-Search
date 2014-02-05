@@ -44,6 +44,14 @@ namespace AmazingCloudSearch.Test.Query
         }
 
         [Test]
+        public void NullFieldShouldNotIncludeColon()
+        {
+            var stringBooleanCondition = new StringBooleanCondition(null, _condition);
+            var output = stringBooleanCondition.GetConditionParam();
+            output.ShouldEqual(string.Format("'{0}'", _condition));
+        }
+
+        [Test]
         public void IsOrConditionShouldBeFalse()
         {
             new StringBooleanCondition(_field, _condition).GetConditionType().ShouldEqual(ConditionType.AND);

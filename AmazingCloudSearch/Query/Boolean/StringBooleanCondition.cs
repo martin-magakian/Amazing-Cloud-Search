@@ -16,10 +16,15 @@ namespace AmazingCloudSearch.Query.Boolean
 
         public string GetConditionParam()
         {
+            var output = "'" + Condition + "'";
+
+            if (!string.IsNullOrWhiteSpace(Field))
+                output = Field + "%3A" +  output;
+
             if (Negate)
-                return "(not+" + Field + "%3A" + "'" + Condition + "')";
-            else
-                return Field + "%3A" + "'" + Condition + "'";
+                output = "(not+" + output + ")";
+
+            return output;
         }
 
         public ConditionType GetConditionType()
