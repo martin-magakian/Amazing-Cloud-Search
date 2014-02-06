@@ -20,25 +20,25 @@ It should look like:
 Next define a class which maps C# data to the Cloud Search index. This example can be used with the
 IMDB default index you can select when setting up Cloud Search.
 
-	```C#
-	public class Movie : CloudSearchDocument
-	{
-		[JsonProperty("title")]
-		public string Title { get; set; }
-		
-		[JsonProperty("director")]
-		public string Director { get; set; }
-		
-		[JsonProperty("actor")]
-		public List<string> Actor { get; set; }
-		
-		[JsonProperty("mydate")]
-		public DateTime MyDate { get; set; }
-		
-		// Optionally leave off JsonProperty and match the index name exactly
-		public int year { get; set; }
-	}
-	```
+```C#
+public class Movie : CloudSearchDocument
+{
+	[JsonProperty("title")]
+	public string Title { get; set; }
+	
+	[JsonProperty("director")]
+	public string Director { get; set; }
+	
+	[JsonProperty("actor")]
+	public List<string> Actor { get; set; }
+	
+	[JsonProperty("mydate")]
+	public DateTime MyDate { get; set; }
+	
+	// Optionally leave off JsonProperty and match the index name exactly
+	public int year { get; set; }
+}
+```
 
 Cloud Search has strict rules about the names of index fields which do not follow typical C#
 conventions. We can either make our property names match, or use `JsonPropertyAttribute` to define
