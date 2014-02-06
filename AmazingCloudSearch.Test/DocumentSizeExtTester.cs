@@ -9,8 +9,8 @@ namespace AmazingCloudSearch.Test
         [Test]
         public void ShouldMatchSizes()
         {
-            var doc = new CloudSearchDocument { id = "some id" };
-            var doc2 = new CloudSearchDocument { id = "some id" };
+            var doc = new CloudSearchDocument { Id = "some id" };
+            var doc2 = new CloudSearchDocument { Id = "some id" };
 
             doc.GetSize().ShouldEqual(doc2.GetSize());
         }
@@ -19,7 +19,7 @@ namespace AmazingCloudSearch.Test
         public void ShouldNotMatchSize()
         {
             var doc = new CloudSearchDocument();
-            var doc2 = new CloudSearchDocument { id = "some different id"};
+            var doc2 = new CloudSearchDocument { Id = "some different id"};
 
             doc.GetSize().ShouldNotEqual(doc2.GetSize());
         }

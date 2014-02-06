@@ -1,12 +1,15 @@
-﻿namespace AmazingCloudSearch.Contract
+﻿using Newtonsoft.Json;
+
+namespace AmazingCloudSearch.Contract
 {
     public class CloudSearchDocument : ICloudSearchDocument
     {
-        public string id { get; set; }
+		[JsonProperty("id")]
+        public string Id { get; set; }
     }
 
     public interface ICloudSearchDocument
     {
-        string id { get; set; }
+        string Id { get; set; }
     }
 }
