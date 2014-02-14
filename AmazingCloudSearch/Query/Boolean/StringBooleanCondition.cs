@@ -1,4 +1,5 @@
-﻿using AmazingCloudSearch.Enum;
+﻿using System;
+using AmazingCloudSearch.Enum;
 namespace AmazingCloudSearch.Query.Boolean
 {
     public class StringBooleanCondition : IBooleanCondition
@@ -16,7 +17,7 @@ namespace AmazingCloudSearch.Query.Boolean
 
         public string GetConditionParam()
         {
-            var output = "'" + Condition + "'";
+            var output = "'" + Uri.EscapeDataString(Condition) + "'";
 
             if (!string.IsNullOrWhiteSpace(Field))
                 output = Field + "%3A" +  output;
