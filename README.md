@@ -221,7 +221,7 @@ Search for movies where genre categories is in: "Sci-Fi" **and** "Fantasy" **and
 
 ```C#
 var list = new List<string> { "Sci-Fi", "Fantasy", "other" };
-var stringList = new StringListBooleanCondition("genre", list, ConditionType.OR);
+var stringList = new StringListBooleanCondition("genre", list, ConditionType.AND);
 var bQuery = new BooleanQuery();
 bQuery.Conditions.Add(stringList);
 
