@@ -28,6 +28,14 @@ namespace AmazingCloudSearch.Test.Query
         }
 
         [Test]
+        public void ShouldUrlEscapeTheValue()
+        {            
+            var stringBooleanCondition = new StringBooleanCondition(Field, " & ");
+            var output = stringBooleanCondition.GetConditionParam();
+            output.ShouldEndWith(string.Format("'%20%26%20'"));
+        }
+
+        [Test]
         public void ShouldEncloseTheConditionInQuotes()
         {            
             var stringBooleanCondition = new StringBooleanCondition(Field, Condition);
