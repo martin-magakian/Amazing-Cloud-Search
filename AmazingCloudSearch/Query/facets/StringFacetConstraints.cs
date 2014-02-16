@@ -33,7 +33,7 @@ namespace AmazingCloudSearch.Query.Facets
             foreach (var c in Constraint)
             {
                 s.Append("'");
-                s.Append(c);
+                s.Append(Uri.EscapeDataString(c));
                 s.Append("'");
 
                 if (!object.ReferenceEquals(lastItem, c))

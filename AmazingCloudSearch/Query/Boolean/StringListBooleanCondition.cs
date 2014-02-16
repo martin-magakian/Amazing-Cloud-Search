@@ -21,15 +21,15 @@ namespace AmazingCloudSearch.Query.Boolean
         {
             StringBuilder condictionParam = new StringBuilder();
 
+            var lastItem = Conditions.Last();
             foreach (string condition in Conditions)
             {
-                condictionParam.Append(Field + "%3A" + "'" + condition + "'");
-                condictionParam.Append("+");
-            }
+                condictionParam.Append(Field + "%3A" + "'" + Uri.EscapeDataString(condition) + "'");
 
-            if (condictionParam.Length > 0)
-            {
-                condictionParam.Remove(condictionParam.Length - 1, 1);
+                if (!object.ReferenceEquals(lastItem, condition))
+                {
+                   condictionParam.Append("+");
+                }
             }
 
             return condictionParam.ToString();
