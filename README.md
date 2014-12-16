@@ -2,7 +2,7 @@ Amazing Cloud Search - C# API For Amazon Cloud Search
 ============
 
 Allow you to search, faceted search, add, update, remove objects from your Amazon Cloud Search Index in C#.
-For using the 2013 API [see the 2013-API branch.](https://github.com/martin-magakian/Amazing-Cloud-Search/tree/API_2013 "Title") 
+For using the 2013 API [see the 2013-API branch.](https://github.com/martin-magakian/Amazing-Cloud-Search/tree/2013-API "Title") 
 
 
 Contribute
