@@ -7,10 +7,8 @@ For using the 2013 API [see the 2013-API branch.](https://github.com/martin-maga
 
 Contribute
 ---------
-Amazon CloudSearch is a AWS library created and maintain by [doduck prototype](http://doduck.com)<br />
+Amazon CloudSearch is a AWS library created and maintain by [Anomaly Detection](https://anomaly.io)<br />
 Feel free to contribute to the project using push request.
-
-Le site [doduck prototype](http://doduck.fr) est aussi disponible en Français.
 
 How to use
 ---------
@@ -370,9 +368,7 @@ Feel free to fork and improve Amazing Cloud Search API.
 Contact
 =========
 Developed by Martin Magakian dev.martin.magakian@gmail.com<br />
-For [doduck prototype](http://doduck.com) (English)
-
-Pour [doduck prototype](http://doduck.fr) (Français)
+by [Anomaly Detection](https://anomaly.io)
 
 
 
@@ -380,6 +376,4 @@ Pour [doduck prototype](http://doduck.fr) (Français)
 License
 =========
 MIT License (MIT)
-
-![githalytics.com alpha](https://cruel-carlota.gopagoda.com/cf04469d46e9c36bb429da1323bebabb "githalytics.com")
 
